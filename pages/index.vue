@@ -9,6 +9,7 @@ import type {
 } from "~/types/api";
 import type {ComboboxItem} from "~/components/ComboboxWithImage.vue";
 import {computed, onMounted, ref, watch} from 'vue'
+import {definePageMeta} from "#imports";
 
 const loadingMarketData = ref<boolean>(true)
 const loadingShopTypes = ref<boolean>(true)
@@ -82,68 +83,54 @@ watch(selectedVehicle, (item: ComboboxItem | null) => {
 </script>
 
 <template>
-  <div>
-    <template #left>
-      <template v-if="!loadingShopTypes && vehicleShopTypes?.length">
-        <ComboboxWithImage label="Shop auswählen" :items="vehicleShopTypes.map((vehicleShopType: VehicleShopType) =>  {
-      return {
+  <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
+  <div class="flex-1 xl:flex">
+    <div class="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-r xl:border-b-0 xl:pl-6">
+      <ComboboxWithImage
+          label="Shop auswählen"
+          :items="vehicleShopTypes.map((vehicleShopType: VehicleShopType) => ({
         id: vehicleShopType.shoptype,
         name: vehicleShopType.shopname
-      }
-    } )" v-model="selectedShopType"/>
-      </template>
+      }))"
+          v-model="selectedShopType"
+      />
 
-      <template v-if="!loadingVehicles && vehicles?.length">
-        <ComboboxWithImage label="Fahrzeug auswählen" :items="vehicles.map((vehicle: Vehicle) =>  {
-      return {
+      <ComboboxWithImage
+          label="Fahrzeug auswählen"
+          :items="vehicles.map((vehicle: Vehicle) => ({
         id: vehicle.id,
         name: vehicle.name
-      }
-    } )" v-model="selectedVehicle"/>
-      </template>
-      <template v-else-if="loadingVehicles">
-        <p>Loading vehicles...</p>
-      </template>
-      <template v-else>
-        <p>No vehicles available for this shop type.</p>
-      </template>
-    </template>
+      }))"
+          v-model="selectedVehicle"
+      />
+    </div>
 
+    <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
+      <div class="mt-4">
+        <h2 class="text-lg font-semibold">Selected Vehicle</h2>
+        <p>Name: {{ fullSelectedVehicle?.name }}</p>
+        <p>Price: {{ fullSelectedVehicle?.price }}</p>
+        <p>v Space: {{ fullSelectedVehicle?.v_space }}</p>
+      </div>
+    </div>
+  </div>
 
-    <template #default>
-      <template v-if="selectedVehicle">
-        <div class="mt-4">
-          <h2 class="text-lg font-semibold">Selected Vehicle</h2>
-          <p>Name: {{ fullSelectedVehicle.name }}</p>
-          <p>Price: {{ fullSelectedVehicle.price }}</p>
-          <p>v Space: {{ fullSelectedVehicle.v_space }}</p>
-        </div>
-      </template>
-    </template>
-
-
-    <template #right>
-      <template v-if="!loadingMarketData && marketData?.length">
-        <ComboboxWithImage label="Marktitem auswählen" :items="marketData.map((marketItem: MarketItem) =>  {
-      return {
+  <div class="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-t-0 lg:border-l lg:pr-8 xl:pr-6">
+    <ComboboxWithImage
+        label="Marktitem auswählen"
+        :items="marketData.map((marketItem: MarketItem) => ({
         id: marketItem.item,
         name: marketItem.localized
-      }
-    } )" v-model="selectedMarketItem"/>
-      </template>
+      }))"
+        v-model="selectedMarketItem"
+    />
 
-      <template v-if="selectedMarketItem">
-        <div class="mt-4">
-          <h2 class="text-lg font-semibold">Selected Market Item</h2>
-          <p>Name: {{ fullSelectedMarketItem.localized }}</p>
-          <p>Price: {{ fullSelectedMarketItem.price }}</p>
-          <p>Amount: {{ fullSelectedMarketItem.export_virt_item.sellPrice }}</p>
-        </div>
-      </template>
-    </template>
+    <div class="mt-4">
+      <h2 class="text-lg font-semibold">Selected Market Item</h2>
+      <p>Name: {{ fullSelectedMarketItem?.localized }}</p>
+      <p>Price: {{ fullSelectedMarketItem?.price }}</p>
+      <p>Amount: {{ fullSelectedMarketItem?.export_virt_item?.sellPrice ?? 'N/A' }}</p>
+    </div>
+  </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

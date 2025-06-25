@@ -11,7 +11,7 @@
         <ChevronUpDownIcon class="size-5 text-gray-400" aria-hidden="true"/>
       </ComboboxButton>
 
-      <ComboboxOptions v-if="filteredItems.length > 0"
+      <ComboboxOptions v-if="filteredItems?.length"
                        class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden sm:text-sm">
         <ComboboxOption v-for="item in filteredItems" :key="item.id" :value="item" as="template"
                         v-slot="{ active, selected }">
@@ -37,25 +37,35 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
 import {Combobox, ComboboxButton, ComboboxInput, ComboboxLabel, ComboboxOption, ComboboxOptions,} from '@headlessui/vue'
 
 export interface ComboboxItem {
-  id: any
-  name: any
+  id: string | number,
+  name: string,
   imageUrl?: string
 }
 
 const props = defineProps({
-  items: Array as () => ComboboxItem[],
+  items: {
+    type: Array as () => ComboboxItem[],
+    default: [],
+    required: true,
+  },
   label: {
     type: String,
     default: 'Auswahl treffen',
   },
 })
 const query = ref('')
-const selectedItem = defineModel()
+const selectedItem = ref<ComboboxItem | null>(null)
+
+const emit = defineEmits(['update:modelValue'])
+watch(selectedItem, (item: ComboboxItem | null) => {
+  emit('update:modelValue', item)
+})
+
 const filteredItems = computed(() =>
     query.value === ''
         ? props.items
