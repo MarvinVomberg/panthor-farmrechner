@@ -32,7 +32,7 @@ export interface MarketItem {
     updated_at: string,
     created_at: string,
     localized: string,
-    export_virt_item: MarketItemExportVirtItem
+    export_virt_item?: MarketItemExportVirtItem
 }
 
 export interface MarketItemExportVirtItem {
