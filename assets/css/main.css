@@ -1,1 +1,7 @@
+@import url("https://rsms.me/inter/inter.css");
 @import "tailwindcss";
+@theme {
+    --color-panthor-red: #e52222;
+    --color-dark: #0f2537;
+    --font-sans: InterVariable, sans-serif;
+}
