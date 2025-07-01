@@ -12,6 +12,7 @@
       </ComboboxButton>
 
       <ComboboxOptions v-if="filteredItems?.length"
+                       @click.prevent
                        class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden sm:text-sm">
         <ComboboxOption v-for="item in filteredItems" :key="item.id" :value="item" as="template"
                         v-slot="{ active, selected }">
