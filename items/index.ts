@@ -78,7 +78,7 @@ export const items = {
     "crude_oil": crude_oil,
     "door": door,
     "fentanyl_syringe": fentanyl_syringe,
-    "fish_files": fish_filet,
+    "fish_filet": fish_filet,
     "fish_sticks": fish_sticks,
     "glass": glass,
     "grape_cake": grapecake,
