@@ -81,7 +81,7 @@ export const items = {
     "fish_filet": fish_filet,
     "fish_sticks": fish_sticks,
     "glass": glass,
-    "grape_cake": grapecake,
+    "grapecake": grapecake,
     "grape_juice": grape_juice,
     "grapes": grapes,
     "heroin_syringe": heroin_syringe,
