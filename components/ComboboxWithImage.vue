@@ -5,7 +5,7 @@
     </ComboboxLabel>
     <div class="relative mt-2">
       <ComboboxInput
-          class="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-panthor-red sm:text-sm/6"
+          class="block w-full rounded-md bg-white/80 py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300/80 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-panthor-red sm:text-sm/6"
           @change="query = $event.target.value" @blur="query = ''" :display-value="(item) => item?.name"/>
       <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
         <ChevronUpDownIcon class="size-5 text-gray-400" aria-hidden="true"/>
