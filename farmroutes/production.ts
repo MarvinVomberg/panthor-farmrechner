@@ -96,7 +96,7 @@ class GenericProduction {
 
     calculateEndProductYield(trunkWeight: number): number {
         if (this.getProductionSteps().length === 1) {
-            return Math.floor(trunkWeight / this.finalWeight);
+            return Math.floor(trunkWeight / this.getRawMaterials()[0].weight);
         }
 
         const rawMaterialWeights = this.rawMaterials.map(m => m.weight);

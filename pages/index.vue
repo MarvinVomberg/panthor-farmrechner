@@ -89,6 +89,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
   <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
     <div class="shrink-0 border-gray-200 px-4 py-6 order-last sm:px-6 lg:w-96 border-t-0 lg:border-l lg:pr-8 xl:pr-6">
       <ComboboxWithImage
+          tabindex="3"
           label="Marktitem auswählen"
           :items="Object.values(farmroutes).map((product: GenericProduction) => {
             return {
@@ -111,6 +112,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
       <div
           class="border-y border-gray-200 px-4 py-6 sm:px-6 lg:border-t-0 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-r xl:border-b-0 xl:pl-6">
         <ComboboxWithImage
+            tabindex="1"
             label="Shop auswählen"
             :items="vehicleShopTypes.map((vehicleShopType: VehicleShopType) => ({
           id: vehicleShopType.shoptype,
@@ -128,6 +130,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
         </template>
 
         <ComboboxWithImage
+            tabindex="2"
             class="mt-8"
             label="Fahrzeug auswählen"
             :items="vehicles.map((vehicle: Vehicle) => ({
@@ -159,27 +162,36 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
       <template v-if="selectedVehicle && selectedMarketItem">
 
         <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-          <h2 class="text-lg font-semibold">Endergebnisse</h2>
-          <p>Ertrag: {{ resultSize.toLocaleString() }} Einheiten</p>
-          <p>Gesamtkosten: {{ resultPrice.toLocaleString() }} €</p>
+          <h2 class="text-xl font-semibold text-panthor-red">Farmroute</h2>
 
-          <template v-for="(productionStep, productionStepX) in productionSteps" :key="productionStepX">
-            <div class="mt-8">
-              Verarbeite
+          <template v-for="(productionStep, productionStepX) in productionSteps" :key="selectedMarketItem.id + '' + productionStepX">
+            <div class="my-8 p-2 border-1 border-panthor-red">
+              <p class="text-lg text-panthor-red font-semibold">{{ productionStepX + 1 }}. Schritt</p>
 
-              <ul class="space-y-4">
-                <template v-for="inputMaterial in productionStep.inputMaterials">
-                  <li>
+              <ul class="space-y-2 my-2">
+                <template v-for="(inputMaterial, inputMaterialX) in productionStep.inputMaterials" :key="selectedMarketItem.id + '' + inputMaterialX">
+                  <li class="text-gray-100">
                     <dl>
-                      <dt>{{ inputMaterial.localized_name }} <span class="text-sm text-gray-500">(Gewicht: {{ inputMaterial.weight }})</span></dt>
-                      <dd class="text-sm text-gray-500">{{ inputMaterial.source }}</dd>
+                      <dt>{{ inputMaterial.localized_name }}<sup class="text-xs text-gray-500">({{ inputMaterial.weight }}kg)</sup></dt>
+                      <dd class="text-xs text-gray-500">{{ inputMaterial.source }}</dd>
                     </dl>
                   </li>
+
+                  <template v-if="inputMaterialX < productionStep.inputMaterials.length - 1">
+                    <li class="text-gray-500">+</li>
+                  </template>
                 </template>
               </ul>
 
-              zu {{ productionStep.output.localized_name }} (Gewicht: {{ productionStep.output.weight }}) an folgendem Ort: <span class="font-semibold">{{ productionStep.facility }}</span>
+              <p class="text-gray-100 mt-8">zu {{ productionStep.output.localized_name }}<sup class="text-xs text-gray-500">({{ productionStep.output.weight }}kg)</sup> verarbeiten an folgendem Ort: {{ productionStep.facility }}</p>
             </div>
+          </template>
+
+          <template v-if="resultPrice === resultSize">
+            <p>und nutze es dann zum craften oder verkaufe es an andere Spieler</p>
+          </template>
+          <template v-else>
+            <p>und erhalte dafür <span class="text-panthor-red">{{ resultSize.toLocaleString() }}kg</span> {{ selectedMarketItem.name }} mit einem Gesamtwert von <span class="text-panthor-red">{{ resultPrice.toLocaleString() }}€</span></p>
           </template>
         </div>
 

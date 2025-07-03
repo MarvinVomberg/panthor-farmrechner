@@ -14,7 +14,7 @@ const step3 = new ProcessingStep("Montagefabrik", [copper_r, rubber], cable, 5, 
 // Gesamte Produktion
 export const cableProduction = new GenericProduction(
     "cable",
-    "kabel",
+    "Kabel",
     [copper_ore, crude_oil],
     [step1, step2, step3],
     5,

@@ -9,12 +9,12 @@ import {insulation} from "~/items/insulation";
 const step1 = new ProcessingStep("Hochofen/Erzhütte", [alu_ore], aluminum_r, 3, 3, new Product("alu_bar", "Alubarren", [], 3));
 const step2 = new ProcessingStep("Baumwollverarbeiter", [cotton_fibers], cotton, 2, 2, new Product("cotton", "Bauwolle", [], 2));
 const step3 = new ProcessingStep("Baustofffabrik", [aluminum_r, cotton], insulation, 5, 5,
-    new Product("Wärmedämmung", "Insulation", [], 5, "Baustoffhändler"));
+    new Product("thermal_insulation", "Wärmedämmung", [], 5, "Baustoffhändler"));
 
 // Gesamte Produktion
 export const insulationProduction = new GenericProduction(
+    "thermal_insulation",
     "Wärmedämmung",
-    "Insulation",
     [alu_ore, cotton_fibers],
     [step1, step2, step3],
     5,

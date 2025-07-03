@@ -6,14 +6,13 @@ import {applepie} from "~/items/applepie";
 import {bandages} from "~/items/bandages";
 import {barley} from "~/items/barley";
 import {beer} from "~/items/beer";
-import {boards} from "~/items/boards";
+import {wood_r} from "~/items/wood_r";
 import {cable} from "~/items/cable";
-import {cement_bag} from "~/items/cement_bag";
+import {concrete} from "~/items/concrete";
 import {charcoal_r} from "~/items/charcoal_r";
 import {chemicals} from "~/items/chemicals";
 import {clay} from "~/items/clay";
 import {clay_boards} from "~/items/clay_boards";
-import {concrete_bag} from "~/items/concrete_bag";
 import {biscuit} from "~/items/biscuit";
 import {copper_r} from "~/items/copper_r";
 import {copper_ore} from "~/items/copper_ore";
@@ -52,6 +51,7 @@ import {wheat} from "~/items/wheat";
 import {wheat_flour} from "~/items/wheat_flour";
 import {windows} from "~/items/windows";
 import {wood} from "~/items/wood";
+import {animal_skins} from "~/items/animal_skins";
 
 export const items = {
     "aluminum_r": aluminum_r,
@@ -59,17 +59,17 @@ export const items = {
     "apple": apple,
     "apple_juice": apple_juice,
     "applepie": applepie,
+    "animal_skins": animal_skins,
     "bandages": bandages,
     "barley": barley,
     "beer": beer,
-    "boards": boards,
+    "wood_r": wood_r,
     "cable": cable,
-    "cement_bag": cement_bag,
+    "concrete": concrete,
     "charcoal_r": charcoal_r,
     "chemicals": chemicals,
     "clay": clay,
     "clay_boards": clay_boards,
-    "concrete_bag": concrete_bag,
     "biscuit": biscuit,
     "copper_r": copper_r,
     "copper_ore": copper_ore,

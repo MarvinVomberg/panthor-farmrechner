@@ -9,12 +9,12 @@ import {windows} from "~/items/windows";
 const step1 = new ProcessingStep("Brennofen", [sand], glass, 3, 3, new Product("glass", "Glas", [], 3));
 const step2 = new ProcessingStep("Kunststofffabrik", [crude_oil], plastic, 3, 3, new Product("plastic", "Plastik", [], 3));
 const step3 = new ProcessingStep("Montagefabrik", [glass, plastic], windows, 5, 5,
-    new Product("Fenster", "Window", [], 5, "Exporthändler"));
+    new Product("window", "Fenster", [], 5, "Exporthändler"));
 
 // Gesamte Produktion
 export const windowProduction = new GenericProduction(
+    "window",
     "Fenster",
-    "Window",
     [sand, crude_oil],
     [step1, step2, step3],
     5,

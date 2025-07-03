@@ -9,11 +9,11 @@ import {lsd} from "~/items/lsd";
 const step1 = new ProcessingStep("Drogenküche ab LVL1", [opium_poppy], heroin_syringe, 4, 4, new Product("heroin_syringe", "Heroinspritze", [], 4));
 const step2 = new ProcessingStep("Raffinerie", [crude_oil], chemicals, 4, 4, new Product("chemicals", "Chemikalien", [], 4));
 const step3 = new ProcessingStep("Drogenküche ab LVL2", [heroin_syringe, chemicals], lsd, 5, 5,
-    new Product("LSD", "LSD", [], 5, "Drogendealer"));
+    new Product("lsd", "LSD", [], 5, "Drogendealer"));
 
 // Gesamte Produktion
 export const lsdProduction = new GenericProduction(
-    "LSD",
+    "lsd",
     "LSD",
     [opium_poppy, crude_oil],
     [step1, step2, step3],

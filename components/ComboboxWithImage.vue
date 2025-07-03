@@ -5,6 +5,7 @@
     </ComboboxLabel>
     <div class="relative mt-2">
       <ComboboxInput
+          :tabindex="tabindex"
           class="block w-full rounded-md bg-white/80 py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300/80 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-panthor-red sm:text-sm/6"
           @change="query = $event.target.value" @blur="query = ''" :display-value="(item) => item?.name"/>
       <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
@@ -45,7 +46,7 @@ import {Combobox, ComboboxButton, ComboboxInput, ComboboxLabel, ComboboxOption, 
 export interface ComboboxItem {
   id: string | number,
   name: string,
-  imageUrl?: string
+  imageUrl?: string,
 }
 
 const props = defineProps({
@@ -57,6 +58,10 @@ const props = defineProps({
   label: {
     type: String,
     default: 'Auswahl treffen',
+  },
+  tabindex: {
+    type: String,
+    default: "0",
   },
 })
 const query = ref('')

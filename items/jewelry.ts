@@ -1,3 +1,3 @@
 import {RawMaterial} from "~/farmroutes/production";
 
-export const jewelry = new RawMaterial("jewelry", "Schmuck", "Schmuckwerkstatt", 3);
+export const jewelry = new RawMaterial("jewellery", "Schmuck", "Schmuckwerkstatt", 3);

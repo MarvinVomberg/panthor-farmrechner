@@ -2,7 +2,6 @@ import {applePieProduction} from "~/farmroutes/applepie";
 import {beerProduction} from "~/farmroutes/beer";
 import {cableProduction} from "~/farmroutes/cable";
 import {clayplateProduction} from "~/farmroutes/clayplate";
-import {concreteBagProduction} from "~/farmroutes/concrete_bag";
 import {biscuitProduction} from "~/farmroutes/biscuit";
 import {doorProduction} from "~/farmroutes/door";
 import {fentanylSyringeProduction} from "~/farmroutes/fentanyl_r";
@@ -17,9 +16,9 @@ import {ironBarProduction} from "~/farmroutes/iron_bar";
 import {chemicalsProduction} from "~/farmroutes/chemicals";
 import {aluminumBarProduction} from "~/farmroutes/alu_bar";
 import {copperBarProduction} from "~/farmroutes/copper_bar";
-import {oilProduction} from "~/farmroutes/oil";
+import {oilProduction} from "~/farmroutes/oil_r";
 import {plasticProduction} from "~/farmroutes/plastic";
-import {boardsProduction} from "~/farmroutes/boards";
+import {boardsProduction} from "~/farmroutes/wood_r";
 import {appleJuiceProduction} from "~/farmroutes/apple_juice";
 import {breadProduction} from "~/farmroutes/bread";
 import {charcoalProduction} from "~/farmroutes/charcoal";
@@ -27,7 +26,7 @@ import {brickProduction} from "~/farmroutes/clay_r";
 import {cottonProduction} from "~/farmroutes/cotton";
 import {appleProduction} from "~/farmroutes/apple";
 import {rollProduction} from "~/farmroutes/bread_roll";
-import {cementBagProduction} from "~/farmroutes/cement_bag";
+import {concreteProduction} from "~/farmroutes/concrete";
 import {grainboozeProduction} from "~/farmroutes/grainbooze";
 import {leatherProduction} from "~/farmroutes/leather";
 import {preciousMetalsProduction} from "~/farmroutes/precious_metal_r";
@@ -46,16 +45,15 @@ export const farmroutes: Farmroutes = {
     applepie: applePieProduction,
     beer: beerProduction,
     biscuit: biscuitProduction,
-    boards: boardsProduction,
+    wood_r: boardsProduction,
     bread: breadProduction,
     roll: rollProduction,
     cable: cableProduction,
-    cement_bag: cementBagProduction,
+    concrete: concreteProduction,
     charcoal_r: charcoalProduction,
     chemicals: chemicalsProduction,
     clayplate: clayplateProduction,
     clay_r: brickProduction,
-    concrete: concreteBagProduction,
     copper_r: copperBarProduction,
     cotton_r: cottonProduction,
     door: doorProduction,
@@ -70,7 +68,7 @@ export const farmroutes: Farmroutes = {
     leather: leatherProduction,
     lsd: lsdProduction,
     moonshiner: moonshinerProduction,
-    oil: oilProduction,
+    oil_r: oilProduction,
     plastic: plasticProduction,
     precious_metal_r: preciousMetalsProduction,
     steel_bar: steelBarProduction,

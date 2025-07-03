@@ -6,8 +6,8 @@ const step1 = new ProcessingStep("Raffinerie", [crude_oil], chemicals, 4, 4, new
 
 // Gesamte Produktion
 export const chemicalsProduction = new GenericProduction(
+    "chemicals",
     "Chemikalien",
-    "Chemicals",
     [crude_oil],
     [step1],
     4
