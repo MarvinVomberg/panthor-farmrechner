@@ -74,11 +74,9 @@ class GenericProduction {
         }
 
         return await fetch('https://api.panthor.de/v1/market/1').then(_ => _.json()).then((marketResponse: MarketItemResponse) => {
-
             const marketItem = marketResponse.data[marketResponse.data.findIndex((marketItem: MarketItem) => marketItem.item === this.productName)];
 
-            return marketItem?.export_virt_item?.sellPrice ?? marketItem.price;
-
+            return marketItem.price;
         })
     }
 

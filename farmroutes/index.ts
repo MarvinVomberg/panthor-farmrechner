@@ -33,6 +33,8 @@ import {preciousMetalsProduction} from "~/farmroutes/precious_metal_r";
 import {fishFiletProduction} from "~/farmroutes/fishfilet";
 import type {GenericProduction} from "~/farmroutes/production";
 import {jewelryProduction} from "~/farmroutes/jewelry";
+import {ciderProduction} from "~/farmroutes/applewine";
+import {meatProduction} from "~/farmroutes/meat_r";
 
 interface Farmroutes {
     [key: string]: GenericProduction;
@@ -43,6 +45,7 @@ export const farmroutes: Farmroutes = {
     apple: appleProduction,
     apple_juice: appleJuiceProduction,
     applepie: applePieProduction,
+    applewine: ciderProduction,
     beer: beerProduction,
     biscuit: biscuitProduction,
     wood_r: boardsProduction,
@@ -67,6 +70,7 @@ export const farmroutes: Farmroutes = {
     jewelry: jewelryProduction,
     leather: leatherProduction,
     lsd: lsdProduction,
+    meat_r: meatProduction,
     moonshiner: moonshinerProduction,
     oil_r: oilProduction,
     plastic: plasticProduction,

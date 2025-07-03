@@ -8,7 +8,7 @@ const step1 = new ProcessingStep("Saftpresse", [apple], apple_juice, 3, 3, new P
 const step2 = new ProcessingStep("Winzerei", [apple_juice], applewine, 2, 2, new Product("applewine", "Apfelwein", [], 2, "Sascha's Bar"));
 
 // Gesamte Produktion
-const ciderProduction = new GenericProduction(
+export const ciderProduction = new GenericProduction(
     "applewine",
     "Apfelwein",
     [apple],
