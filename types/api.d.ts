@@ -1,3 +1,6 @@
+import _default from "@speed-highlight/core/common";
+import num = _default.num;
+
 export interface VehicleShopType {
     shoptype: string,
     shopname: string
@@ -22,6 +25,44 @@ export interface Vehicle {
 
 export interface VehicleResponse {
     data: Vehicle[],
+    requested_at: number,
+}
+
+export interface PlayerVehicle {
+    "id": number,
+    "pid": string,
+    "side": string,
+    "classname": string,
+    "type": string,
+    "plate": string,
+    "active": boolean,
+    "impound": boolean,
+    "alarm": boolean,
+    "disabled": boolean,
+    "color": string,
+    "inventory": string,
+    "gear": string,
+    "fuel": string,
+    "fuelcargo": -1,
+    "tuning_color": string,
+    "tuning_array": string,
+    "tuning_perm": boolean,
+    "hitpoints": string,
+    "kilometer": number,
+    "kilometer_total": number,
+    "lastgarage": string,
+    "alive": boolean,
+    "insurance": boolean,
+    "companyid": number,
+    "companytype": string,
+    "updated_at": string,
+    "created_at": string,
+    "vehicle_data": Vehicle,
+    "export_vehicles": Vehicle[],
+}
+
+export interface PlayerVehiclesResponse {
+    data: PlayerVehicle[],
     requested_at: number,
 }
 
