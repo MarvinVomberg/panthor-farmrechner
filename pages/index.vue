@@ -106,17 +106,15 @@ watch(playerAPIToken, () => {
 })
 
 watch([selectedMarketItem, selectedVehicle], async () => {
-  if (!fullSelectedVehicle.value) return;
   if (!selectedMarketItem.value) return;
+  productionSteps.value = farmroutes[selectedMarketItem.value.id].getProductionSteps()
 
-  console.log('Calculating farmroute for', selectedMarketItem.value.id, 'with vehicle', fullSelectedVehicle.value.id);
 
+  if (!fullSelectedVehicle.value) return;
   resultSize.value = farmroutes[selectedMarketItem.value.id].calculateEndProductYield(fullSelectedVehicle.value.v_space);
 
   const itemPrice = await farmroutes[selectedMarketItem.value.id].getPrice();
   resultPrice.value = itemPrice * resultSize.value;
-
-  productionSteps.value = farmroutes[selectedMarketItem.value.id].getProductionSteps()
 })
 
 watch([selectedMarketItem], () => {
@@ -298,7 +296,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
       </div>
 
 
-      <template v-if="selectedVehicle && selectedMarketItem">
+      <template v-if="selectedMarketItem">
 
         <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
           <h2 class="text-xl font-semibold text-panthor-red">Farmroute</h2>
@@ -332,13 +330,15 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
             </div>
           </template>
 
-          <template v-if="resultPrice === resultSize">
-            <p>und nutze es dann zum craften oder verkaufe es an andere Spieler</p>
-          </template>
-          <template v-else>
-            <p>und erhalte dafür <span class="text-panthor-red">{{ resultSize.toLocaleString() }}kg</span>
-              {{ selectedMarketItem.name }} mit einem Gesamtwert von <span
-                  class="text-panthor-red">{{ resultPrice.toLocaleString() }}€</span></p>
+          <template v-if="selectedVehicle  && selectedMarketItem">
+            <template v-if="resultPrice === resultSize">
+              <p>und nutze es dann zum craften oder verkaufe es an andere Spieler</p>
+            </template>
+            <template v-else>
+              <p>und erhalte dafür <span class="text-panthor-red">{{ resultSize.toLocaleString() }}kg</span>
+                {{ selectedMarketItem.name }} mit einem Gesamtwert von <span
+                    class="text-panthor-red">{{ resultPrice.toLocaleString() }}€</span></p>
+            </template>
           </template>
         </div>
       </template>
