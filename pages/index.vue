@@ -40,7 +40,7 @@ const marketHistoryData = ref<ChartItem[]>([])
 
 const tabs = ref([
   {name: 'Shops', icon: TruckIcon, current: true},
-  {name: 'Garage', icon: HomeIcon, current: false},
+  {name: 'Garage', icon: HomeIcon, current: false}
 ])
 
 const toggleTab = (tabName: string) => {
@@ -72,7 +72,6 @@ onMounted(() => {
 const fetchVehiclesForShopType = (vehicleShopType: string | number) => {
   loadingVehicles.value = true
   selectedVehicle.value = null
-  playerAPIToken.value = '';
 
   fetch(`https://api.panthor.de/v1/info/vehicles/${vehicleShopType}`).then((jsonResponse) => jsonResponse.json()).then((response: VehicleResponse) => {
     vehicles.value = response.data
@@ -108,6 +107,10 @@ watch(playerAPIToken, () => {
   playerVehicles.value = [];
 })
 
+watch(tabs, () => {
+  selectedVehicle.value = null;
+}, {deep: true})
+
 watch([selectedMarketItem, selectedVehicle], async () => {
   if (!selectedMarketItem.value) return;
   productionSteps.value = farmroutes[selectedMarketItem.value.id].getProductionSteps()
@@ -133,7 +136,6 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
 
   fetchVehiclesForShopType(item.id);
 });
-
 </script>
 
 <template>
@@ -215,7 +217,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
           </div>
         </div>
 
-        <template v-if="selectedTab?.name === 'Shops'">
+        <div v-show="selectedTab?.name === 'Shops'">
           <ComboboxWithImage
               tabindex="1"
               label="Shop auswählen"
@@ -255,14 +257,14 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
           <template v-if="selectedVehicle && fullSelectedVehicle">
             <div class="mt-8">
               <h3 class="text-sm font-semibold">Details zum Fahrzeug</h3>
-              <p class="mt-2 text-sm text-gray-500">Name: {{ fullSelectedVehicle.name }}</p>
-              <p class="text-sm text-gray-500">Kapazität: {{ fullSelectedVehicle.v_space.toLocaleString() }}
+              <p class="mt-2 text-sm text-gray-500 truncate">Name: {{ fullSelectedVehicle.name }}</p>
+              <p class="text-sm text-gray-500 truncate">Kapazität: {{ fullSelectedVehicle.v_space.toLocaleString() }}
                 Einheiten</p>
-              <p class="text-sm text-gray-500">Preis: {{ fullSelectedVehicle.price.toLocaleString() }} €</p>
+              <p class="text-sm text-gray-500 truncate">Preis: {{ fullSelectedVehicle.price.toLocaleString() }} €</p>
             </div>
           </template>
-        </template>
-        <template v-if="selectedTab?.name === 'Garage'">
+        </div>
+        <div v-show="selectedTab?.name === 'Garage'">
           <div>
             <TextInput
                 v-model="playerAPIToken"
@@ -295,7 +297,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
               />
             </template>
           </div>
-        </template>
+        </div>
       </div>
 
 
