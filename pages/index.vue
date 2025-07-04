@@ -16,6 +16,7 @@ import type {ChartItem} from "~/types/charts";
 import {ChevronDownIcon} from '@heroicons/vue/16/solid';
 import {HomeIcon, ShieldCheckIcon, TruckIcon} from '@heroicons/vue/20/solid';
 import TextInput from "~/components/TextInput.vue";
+import {undefined} from "zod";
 
 const playerAPIToken = ref<string>('')
 const playerAPITokenError = ref<string | null>(null)
@@ -90,9 +91,11 @@ const fetchGarage = () => {
   selectedVehicle.value = null
 
   fetch(`https://api.panthor.de/v1/player/${playerAPIToken.value}/vehicles`).then((jsonResponse) => jsonResponse.json()).then((response: PlayerVehiclesResponse) => {
-    playerVehicles.value = response.data.map((playerVehicle: PlayerVehicle) => {
+    playerVehicles.value = response.data.filter((playerVehicle: PlayerVehicle) => {
+      return playerVehicle.side.toLowerCase() === 'civ';
+    }).map((playerVehicle: PlayerVehicle) => {
       return playerVehicle.vehicle_data;
-    })
+    });
   }).catch(() => {
     playerAPITokenError.value = 'Fehler beim Laden der Fahrzeuge. Bitte überprüfe deinen API Token.'
   }).finally(() => {
