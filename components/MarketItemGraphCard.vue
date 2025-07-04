@@ -8,6 +8,10 @@ defineProps(
       type: Array as () => ChartItem[],
       required: true
     },
+    priceNow: {
+      type: Number,
+      default: 1
+    },
     onlyGraph: {
       type: Boolean,
       default: false
@@ -33,7 +37,7 @@ defineProps(
           {{ title }}
         </h3>
         <div class="inline-flex items-center">
-          <h4 class="text-md uppercase text-gray-400 leading-tight mr-2">{{ marketHistoryData[0].price.toLocaleString() }} €</h4>
+          <h4 class="text-md uppercase text-gray-400 leading-tight mr-2">{{ priceNow.toLocaleString() }} €</h4>
 
           <template v-if="(marketHistoryData[marketHistoryData.length - 1].price / marketHistoryData[0].price) > 1">
             <ArrowTrendingUpIcon class="text-green-500 size-6" />

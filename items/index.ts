@@ -40,9 +40,9 @@ import {plastic} from "~/items/plastic";
 import {raw_fentanyl} from "~/items/raw_fentanyl";
 import {rubber} from "~/items/rubber";
 import {rye} from "~/items/rye";
-import {rye_flour} from "~/items/rye_flour";
+import {rye_r} from "~/items/rye_r";
 import {sand} from "~/items/sand";
-import {steel_bar} from "~/items/steel_bar";
+import {steel_r} from "~/items/steel_r";
 import {stone} from "~/items/stone";
 import {sugar} from "~/items/sugar";
 import {sugar_beet} from "~/items/sugar_beet";
@@ -97,9 +97,9 @@ export const items = {
     "raw_fentanyl": raw_fentanyl,
     "rubber": rubber,
     "rye": rye,
-    "rye_flour": rye_flour,
+    "rye_flour": rye_r,
     "sand": sand,
-    "steel_bar": steel_bar,
+    "steel_r": steel_r,
     "stone": stone,
     "sugar": sugar,
     "sugar_beet": sugar_beet,

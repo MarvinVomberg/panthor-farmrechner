@@ -23,7 +23,7 @@ const getMarketItemByName = (name: string): MarketItem | undefined => {
   return allMarketItems.value?.find((item: MarketItem) => item.localized === name)
 }
 
-const getFarmrouteByName = (name: string|null): GenericProduction | undefined => {
+const getFarmrouteByName = (name: string|undefined): GenericProduction | undefined => {
   if (!name) return undefined;
 
   return farmroutes[name]
@@ -33,7 +33,7 @@ watch(allMarketItems, () => {
   if (!allMarketItems.value) return;
 
   allMarketItems.value?.map((marketItem: MarketItem) => {
-    fetch(`https://api.panthor.de/v1/market_logs/1/${marketItem.item}/50`).then((jsonResponse) => jsonResponse.json()).then((response: MarketItemLogsResponse) => {
+    fetch(`https://api.panthor.de/v1/market_logs/1/${marketItem.item}/60`).then((jsonResponse) => jsonResponse.json()).then((response: MarketItemLogsResponse) => {
       marketHistoryData.value.push([response.data[0].reverse()])
     })
   })
@@ -47,10 +47,11 @@ watch(allMarketItems, () => {
     <template v-for="(marketItemHistoryData, marketItemHistoryDataX) in marketHistoryData"
               :key="marketItemHistoryDataX">
       <MarketItemGraphCard
-          :title="getFarmrouteByName(getMarketItemByName(marketItemHistoryData[0][0].item)?.item)?.productLocalizedName || getMarketItemByName(marketItemHistoryData[0][0].item)?.localized || 'Lade...'"
+          :title="getFarmrouteByName(getMarketItemByName(marketItemHistoryData[0][0].item)?.item)?.productLocalizedName || 'Lade...' + getMarketItemByName(marketItemHistoryData[0][0].item)?.item"
           :only-graph="true"
           :height="50"
           :market-history-data="marketItemHistoryData[0]"
+          :price-now="getMarketItemByName(marketItemHistoryData[0][0].item)?.price"
       />
     </template>
     </template>

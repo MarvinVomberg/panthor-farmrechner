@@ -8,8 +8,8 @@ const step1 = new ProcessingStep("Hochofen/Erzhütte", [iron_ore], iron_bar, 3, 
 
 // Gesamte Produktion
 export const ironBarProduction = new GenericProduction(
+    "iron_r",
     "Eisenbarren",
-    "Iron Bar",
     [iron_ore],
     [step1],
     3,

@@ -10,7 +10,7 @@ import {grapeCakeProduction} from "~/farmroutes/grapecake";
 import {insulationProduction} from "~/farmroutes/insulation";
 import {lsdProduction} from "~/farmroutes/lsd";
 import {moonshinerProduction} from "~/farmroutes/moonshiner";
-import {steelBarProduction} from "~/farmroutes/steel_bar";
+import {steelBarProduction} from "~/farmroutes/steel_r";
 import {windowProduction} from "~/farmroutes/window";
 import {ironBarProduction} from "~/farmroutes/iron_bar";
 import {chemicalsProduction} from "~/farmroutes/chemicals";
@@ -35,6 +35,15 @@ import type {GenericProduction} from "~/farmroutes/production";
 import {jewelryProduction} from "~/farmroutes/jewelry";
 import {ciderProduction} from "~/farmroutes/applewine";
 import {meatProduction} from "~/farmroutes/meat_r";
+import {honeyProduction} from "~/farmroutes/honey_r";
+import {glassProduction} from "~/farmroutes/sand_r";
+import {vodkaProduction} from "~/farmroutes/vodka";
+import {wheatFlourProduction} from "~/farmroutes/wheat_flour";
+import {sugarProduction} from "~/farmroutes/sugar_r";
+import {ryeFlourProduction} from "~/farmroutes/rye_r";
+import {tissueProduction} from "~/farmroutes/tissue";
+import {wineProduction} from "~/farmroutes/wine_r";
+import {grapeJuiceProduction} from "~/farmroutes/grape_juice";
 
 interface Farmroutes {
     [key: string]: GenericProduction;
@@ -50,6 +59,7 @@ export const farmroutes: Farmroutes = {
     biscuit: biscuitProduction,
     wood_r: boardsProduction,
     bread: breadProduction,
+    honey_r: honeyProduction,
     roll: rollProduction,
     cable: cableProduction,
     concrete: concreteProduction,
@@ -64,9 +74,10 @@ export const farmroutes: Farmroutes = {
     fishsticks: fishSticksProduction,
     fishfilet: fishFiletProduction,
     grapecake: grapeCakeProduction,
+    grape_juice: grapeJuiceProduction,
     grainbooze: grainboozeProduction,
-    insulation: insulationProduction,
-    iron_bar: ironBarProduction,
+    thermal_insulation: insulationProduction,
+    iron_r: ironBarProduction,
     jewelry: jewelryProduction,
     leather: leatherProduction,
     lsd: lsdProduction,
@@ -75,6 +86,14 @@ export const farmroutes: Farmroutes = {
     oil_r: oilProduction,
     plastic: plasticProduction,
     precious_metal_r: preciousMetalsProduction,
-    steel_bar: steelBarProduction,
+    steel: steelBarProduction,
+    sand_r: glassProduction,
     window: windowProduction,
+    vodka: vodkaProduction,
+    wheat_r: wheatFlourProduction,
+    sugar_r: sugarProduction,
+    rye_r: ryeFlourProduction,
+    tissue: tissueProduction,
+    wine_r: wineProduction,
+
 }
