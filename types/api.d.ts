@@ -51,3 +51,20 @@ export interface MarketItemResponse {
     data: MarketItem[],
     requested_at: number,
 }
+
+export interface MarketItemLog {
+    id: number,
+    item: string,
+    price: number,
+    server_id: number,
+    created_at: string,
+}
+
+interface MarketItemLogData {
+    [key: number]: MarketItemLog[],
+}
+
+export interface MarketItemLogsResponse {
+    data: MarketItemLogData,
+    requested_at: number,
+}

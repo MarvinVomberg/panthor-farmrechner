@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {
-  MarketItem,
-  MarketItemResponse,
+  MarketItemLog,
+  MarketItemLogsResponse,
   Vehicle,
   VehicleResponse,
   VehicleShopType,
@@ -11,16 +11,7 @@ import type {ComboboxItem} from "~/components/ComboboxWithImage.vue";
 import {computed, onMounted, ref, watch} from 'vue'
 import {farmroutes} from "~/farmroutes";
 import {type GenericProduction, ProcessingStep} from "~/farmroutes/production";
-
-useHead({
-  title: "Farmrechner | Panthor.de",
-  htmlAttrs: {
-    class: "h-full bg-dark text-gray-200"
-  },
-  bodyAttrs: {
-    class: "h-full"
-  },
-})
+import type {ChartItem} from "~/types/charts";
 
 const loadingShopTypes = ref<boolean>(false)
 const loadingVehicles = ref<boolean>(false)
@@ -34,7 +25,9 @@ const selectedMarketItem = ref<ComboboxItem | null>(null)
 
 const resultSize = ref<number>(0)
 const resultPrice = ref<number>(0)
-const productionSteps = ref<ProcessingStep[]>([]);
+const productionSteps = ref<ProcessingStep[]>([])
+
+const marketHistoryData = ref<ChartItem[]>([])
 
 const fullSelectedVehicle = computed<Vehicle | null>(() => {
   if (!selectedVehicle.value) {
@@ -64,10 +57,8 @@ const fetchVehiclesForShopType = (vehicleShopType: string | number) => {
 }
 
 watch([selectedMarketItem, selectedVehicle], async () => {
-  if(!fullSelectedVehicle.value) return;
-  if(!selectedMarketItem.value) return;
-
-  console.log(selectedMarketItem.value.id)
+  if (!fullSelectedVehicle.value) return;
+  if (!selectedMarketItem.value) return;
 
   resultSize.value = farmroutes[selectedMarketItem.value.id].calculateEndProductYield(fullSelectedVehicle.value.v_space);
 
@@ -77,10 +68,18 @@ watch([selectedMarketItem, selectedVehicle], async () => {
   productionSteps.value = farmroutes[selectedMarketItem.value.id].getProductionSteps()
 })
 
+watch([selectedMarketItem], () => {
+  if (!selectedMarketItem.value) return;
+
+  fetch(`https://api.panthor.de/v1/market_logs/1/${selectedMarketItem.value.id}/50`).then(_ => _.json()).then((marketItemLogsResponse: MarketItemLogsResponse) => {
+    marketHistoryData.value = marketItemLogsResponse.data[0].reverse();
+  })
+})
+
 watch(selectedShopType, (item: ComboboxItem | null) => {
-  if (item) {
-    fetchVehiclesForShopType(item.id);
-  }
+  if (!item) return;
+
+  fetchVehiclesForShopType(item.id);
 });
 
 </script>
@@ -106,6 +105,27 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
         </p>
       </div>
 
+      <template v-if="marketHistoryData.length">
+        <div class="chart-wrapper mt-8">
+          <AreaChart
+              :height="200"
+              :data="marketHistoryData"
+              :xDomainLine="true"
+              :yDomainLine="true"
+              :categories="{
+                price: {
+                  name: 'Aktueller Preis: ' + marketHistoryData[marketHistoryData.length - 1].price + ' €',
+                  color: '#ff0000'
+                }
+              }"
+              :yFormatter="(value: number) => value.toLocaleString('de-DE', { style: 'currency', trailingZeroDisplay: 'stripIfInteger', currency: 'EUR' })"
+              :xFormatter="(i: number) => new Date(marketHistoryData[i].created_at).toLocaleTimeString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit'
+              })"
+          />
+        </div>
+      </template>
     </div>
 
     <div class="flex-1 order-first xl:flex">
@@ -158,21 +178,24 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
       </div>
 
 
-
       <template v-if="selectedVehicle && selectedMarketItem">
 
         <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
           <h2 class="text-xl font-semibold text-panthor-red">Farmroute</h2>
 
-          <template v-for="(productionStep, productionStepX) in productionSteps" :key="selectedMarketItem.id + '' + productionStepX">
+          <template v-for="(productionStep, productionStepX) in productionSteps"
+                    :key="selectedMarketItem.id + '' + productionStepX">
             <div class="my-8 p-2 border-1 border-panthor-red">
               <p class="text-lg text-panthor-red font-semibold">{{ productionStepX + 1 }}. Schritt</p>
 
               <ul class="space-y-2 my-2">
-                <template v-for="(inputMaterial, inputMaterialX) in productionStep.inputMaterials" :key="selectedMarketItem.id + '' + inputMaterialX">
+                <template v-for="(inputMaterial, inputMaterialX) in productionStep.inputMaterials"
+                          :key="selectedMarketItem.id + '' + inputMaterialX">
                   <li class="text-gray-100">
                     <dl>
-                      <dt>{{ inputMaterial.localized_name }}<sup class="text-xs text-gray-500">({{ inputMaterial.weight }}kg)</sup></dt>
+                      <dt>{{ inputMaterial.localized_name }}<sup class="text-xs text-gray-500">({{
+                          inputMaterial.weight
+                        }}kg)</sup></dt>
                       <dd class="text-xs text-gray-500">{{ inputMaterial.source }}</dd>
                     </dl>
                   </li>
@@ -183,7 +206,9 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
                 </template>
               </ul>
 
-              <p class="text-gray-100 mt-8">zu {{ productionStep.output.localized_name }}<sup class="text-xs text-gray-500">({{ productionStep.output.weight }}kg)</sup> verarbeiten an folgendem Ort: {{ productionStep.facility }}</p>
+              <p class="text-gray-100 mt-8">zu {{ productionStep.output.localized_name }}<sup
+                  class="text-xs text-gray-500">({{ productionStep.output.weight }}kg)</sup> verarbeiten an folgendem
+                Ort: {{ productionStep.facility }}</p>
             </div>
           </template>
 
@@ -191,14 +216,15 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
             <p>und nutze es dann zum craften oder verkaufe es an andere Spieler</p>
           </template>
           <template v-else>
-            <p>und erhalte dafür <span class="text-panthor-red">{{ resultSize.toLocaleString() }}kg</span> {{ selectedMarketItem.name }} mit einem Gesamtwert von <span class="text-panthor-red">{{ resultPrice.toLocaleString() }}€</span></p>
+            <p>und erhalte dafür <span class="text-panthor-red">{{ resultSize.toLocaleString() }}kg</span>
+              {{ selectedMarketItem.name }} mit einem Gesamtwert von <span
+                  class="text-panthor-red">{{ resultPrice.toLocaleString() }}€</span></p>
           </template>
         </div>
 
-
-
-
       </template>
     </div>
+
+
   </div>
 </template>
