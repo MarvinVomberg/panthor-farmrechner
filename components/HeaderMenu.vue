@@ -14,7 +14,7 @@
       </div>
       <NuxtLink to="/" class="-m-1.5 p-1.5">
         <span class="sr-only">Panthor</span>
-        <NuxtImg class="h-8 w-auto" src="panthor_logo.png" alt="Panthor" />
+        <NuxtImg class="h-8 w-auto" src="/images/panthor_logo.png" alt="Panthor" />
       </NuxtLink>
       <div class="flex flex-1 justify-end">
         <a href="https://panthor.de" target="_blank" class="text-sm/6 font-semibold text-gray-100">Offizielle Website <span aria-hidden="true">&rarr;</span></a>
@@ -31,7 +31,7 @@
             </button>
           </div>
           <div class="-m-1.5 p-1.5">
-            <NuxtImg class="h-8 w-auto" src="panthor_logo.png" alt="" />
+            <NuxtImg class="h-8 w-auto" src="/images/panthor_logo.png" alt="" />
           </div>
           <div class="flex flex-1 justify-end">
             <a href="https://panthor.de" target="_blank" class="text-sm/6 font-semibold text-gray-100">Offizielle Website <span aria-hidden="true">&rarr;</span></a>
