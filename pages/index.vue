@@ -22,6 +22,8 @@ const playerAPIToken = ref<string>('')
 const playerAPITokenError = ref<string | null>(null)
 const playerVehicles = ref<Vehicle[]>([])
 
+const backpackSize = ref<number>(0)
+
 const loadingShopTypes = ref<boolean>(false)
 const loadingVehicles = ref<boolean>(false)
 
@@ -111,13 +113,13 @@ watch(tabs, () => {
   selectedVehicle.value = null;
 }, {deep: true})
 
-watch([selectedMarketItem, selectedVehicle], async () => {
+watch([selectedMarketItem, selectedVehicle, backpackSize], async () => {
   if (!selectedMarketItem.value) return;
   productionSteps.value = farmroutes[selectedMarketItem.value.id].getProductionSteps()
 
 
   if (!fullSelectedVehicle.value) return;
-  resultSize.value = farmroutes[selectedMarketItem.value.id].calculateEndProductYield(fullSelectedVehicle.value.v_space);
+  resultSize.value = farmroutes[selectedMarketItem.value.id].calculateEndProductYield(fullSelectedVehicle.value.v_space + backpackSize.value);
 
   const itemPrice = await farmroutes[selectedMarketItem.value.id].getPrice();
   resultPrice.value = itemPrice * resultSize.value;
@@ -191,7 +193,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
           <div class="grid grid-cols-1 sm:hidden">
             <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
             <select @change="toggleTab($event.target?.value)" aria-label="Select a tab"
-                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-panthor-red">
+                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/80 py-2 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-panthor-red">
               <option v-for="tab in tabs" :key="tab.name" :selected="tab.current" :value="tab.name">{{
                   tab.name
                 }}
@@ -298,6 +300,19 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
             </template>
           </div>
         </div>
+
+        <div class="w-full flex justify-center my-8">
+          <hr class="w-4/5">
+        </div>
+
+        <TextInput
+            v-model="backpackSize"
+            label="Rucksackgröße"
+            placeholder="Gib deine Rucksackgröße ein"
+            description="Gib die Größe deines Z-Inventars ein."
+            type="number"
+            id="backpack-size-input"
+        />
       </div>
 
 
