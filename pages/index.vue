@@ -209,7 +209,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
             <div class="border-b border-gray-200">
               <nav class="-mb-px flex" aria-label="Tabs">
                 <button v-for="tab in tabs" :key="tab.name" @click="toggleTab(tab.name)"
-                        :class="[tab.current ? 'border-panthor-red text-panthor-red' : 'border-transparent text-gray-400 hover:border-gray-300 hover:text-gray-300', 'group inline-flex items-center border-b px-4 py-4 text-sm font-medium cursor-pointer transition-all ease-linear']"
+                        :class="[tab.current ? 'border-panthor-red text-panthor-red' : 'border-transparent text-gray-400 hover:border-gray-300 hover:text-gray-300', 'group inline-flex items-center border-b px-4 pb-4 text-sm font-medium cursor-pointer transition-all ease-linear']"
                         :aria-current="tab.current ? 'page' : undefined">
                   <component :is="tab.icon"
                              :class="[tab.current ? 'text-panthor-red' : 'text-gray-400 group-hover:text-gray-400', 'mr-2 -ml-0.5 size-5 transition ease-in-out duration-150']"
@@ -323,7 +323,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
       <template v-if="selectedMarketItem">
 
         <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6" v-auto-animate>
-          <h2 class="text-xl font-semibold text-panthor-red">Farmroute</h2>
+          <h2 class="text-lg font-semibold text-panthor-red">Farmroute</h2>
 
           <template v-for="(productionStep, productionStepX) in productionSteps"
                     :key="selectedMarketItem.id + '' + productionStepX">
