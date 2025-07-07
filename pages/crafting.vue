@@ -25,6 +25,7 @@ const selectCategory = (categoryName: string, clearHistory: boolean = false) => 
 const selectItem = (itemName: string) => {
   if (selectedCategory.value) {
     selectedItem.value = selectedCategory.value?.items?.find(item => item.name === itemName) || null;
+    selectedFarmroute.value = null;
   }
 }
 
