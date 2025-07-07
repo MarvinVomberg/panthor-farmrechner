@@ -34,11 +34,11 @@ const childCategories = computed(() => {
 <template>
 
   <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
-    <div class="grid grid-cols-1 lg:grid-cols-4 mt-4">
+    <div class="grid grid-cols-1 lg:grid-cols-4 mt-4 pb-12">
 
       <div class="col-span-1 lg:col-span-4">
         <template v-if="!selectCategory || childCategories.length > 0">
-          <div class="overflow-hidden sm:grid sm:grid-cols-2 gap-12 mx-24" v-auto-animate>
+          <div class="overflow-hidden sm:grid sm:grid-cols-2 gap-12 mx-4 space-y-4 lg:mx-24 lg:space-y-0" v-auto-animate>
             <div v-for="(category, categoryIdx) in (selectedCategory === null ? mainCategories : childCategories)" :key="category.name"
                  class="rounded-lg group relative cursor-pointer hover:bg-white/20 bg-white/10 p-6">
               <div>
@@ -62,7 +62,7 @@ const childCategories = computed(() => {
         </template>
 
         <template v-if="selectedCategory?.items?.length">
-          <div class="mt-8 mx-24">
+          <div class="mt-8 mx-4 lg:mx-24">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" v-auto-animate>
               <div v-for="item in selectedCategory.items" :key="item.name"
                    class="bg-white/10 hover:bg-white/20 rounded-lg p-4 cursor-pointer"
@@ -77,7 +77,7 @@ const childCategories = computed(() => {
         </template>
 
         <template v-if="selectedItem">
-          <div class="mt-8 mx-24">
+          <div class="mt-8 mx-4 lg:mx-24">
               <h3 class="text-lg font-semibold text-gray-100">Folgende Materialien werden benötigt</h3>
 
             <ul role="list" class="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3" v-auto-animate>
@@ -110,7 +110,7 @@ const childCategories = computed(() => {
         </template>
 
         <template v-if="selectedFarmroute">
-          <div class="col-span-1 lg:col-span-4 mt-8 mx-24" v-auto-animate>
+          <div class="col-span-1 lg:col-span-4 mt-8 mx-4 lg:mx-24" v-auto-animate>
             <Farmroute :product="selectedFarmroute"/>
           </div>
         </template>
