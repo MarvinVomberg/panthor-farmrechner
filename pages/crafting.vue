@@ -14,6 +14,8 @@ const selectedFarmroute = ref<GenericProduction | null>(null);
 const selectCategory = (categoryName: string, clearHistory: boolean = false) => {
   backwardsHistory.value.push(selectedCategory.value);
   selectedCategory.value = craftingCategories.find(cat => cat.name === categoryName) || null;
+  selectedItem.value = null;
+  selectedFarmroute.value = null;
 
   if(clearHistory) {
     forwardHistory.value = [];
@@ -42,6 +44,7 @@ const selectPreviousCategory = () => {
   if (backwardsHistory.value.length > 0) {
     selectedCategory.value = backwardsHistory.value.pop();
     selectedItem.value = null;
+    selectedFarmroute.value = null;
   }
 }
 
@@ -126,7 +129,7 @@ const selectNextCategory = () => {
                         {{ material.requiredItem.productLocalizedName }}
                       </template>
                       <template v-else>
-                        {{ material.localized }}
+                        {{ material.requiredItem.localized }}
                       </template>
                     </p>
                     <p class="text-gray-500">{{ material.amount }} Einheit(-en)</p>
