@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="mt-6 space-y-2">
-          <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to" :target="item.target" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-100 hover:bg-white/10">{{ item.name }}</NuxtLink>
+          <NuxtLink @click="mobileMenuOpen = false" v-for="item in navigation" :key="item.name" :to="item.to" :target="item.target" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-100 hover:bg-white/10">{{ item.name }}</NuxtLink>
         </div>
       </DialogPanel>
     </Dialog>
@@ -56,6 +56,8 @@ const navigation = [
   { name: 'Live-Markt', to: '/market', target: '_self' },
   { name: 'Crafting', to: '/crafting', target: '_self' },
 ]
+
+const router = useRouter()
 
 const mobileMenuOpen = ref(false)
 </script>
