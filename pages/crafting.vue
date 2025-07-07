@@ -2,7 +2,7 @@
 import {craftingCategories} from "~/crafting/crafting";
 import {type CraftCategory, CraftItem} from "~/types/crafting";
 import {GenericProduction} from "~/farmroutes/production";
-import {TruckIcon} from "@heroicons/vue/16/solid";
+import {TruckIcon, HomeIcon} from "@heroicons/vue/16/solid";
 import {vAutoAnimate} from "@formkit/auto-animate/vue";
 
 const mainCategories = craftingCategories.filter((category) => category.parentCategory === null);
@@ -54,24 +54,63 @@ const selectNextCategory = () => {
 </script>
 
 <template>
+  <div class="mx-auto w-full max-w-7xl grow lg:flex justify-between xl:px-2 mt-4">
+    <nav class="flex mx-4 lg:mx-24" aria-label="Breadcrumb">
+      <ol role="list" class="flex items-center space-x-4">
+        <li>
+          <div>
+            <p class="text-gray-400 hover:text-gray-300">
+              <span class="sr-only">Home</span>
+              <HomeIcon class="h-5 w-5" aria-hidden="true"/>
+            </p>
+          </div>
+        </li>
+        <template v-if="backwardsHistory">
+        <li v-for="(category, index) in Array.from(backwardsHistory).reverse()" :key="index">
+          <div class="flex items-center">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 19.5l-6-6m0 0l6-6m-6 6h18"/>
+            </svg>
+            <p class="ml-4 text-sm font-medium text-gray-200 hover:text-gray-300 focus:outline-hidden">
+              {{ category?.localized ?? selectedCategory?.localized }}
+            </p>
+          </div>
+        </li>
+        </template>
+        <li v-if="selectedItem">
+          <div class="flex items center">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 19.5l-6-6m0 0l6-6m-6 6h18"/>
+            </svg>
+            <span class="ml-4 text-sm font-medium text-gray-200">{{ selectedItem.localized }}</span>
+          </div>
+        </li>
+        <li v-if="selectedFarmroute">
+          <div class="flex items center">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 19.5l-6-6m0 0l6-6m-6 6h18"/>
+            </svg>
+            <span class="ml-4 text-sm font-medium text-gray-200">{{ selectedFarmroute.productLocalizedName }}</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
 
-  <template v-if="backwardsHistory.length || forwardHistory.length">
-  <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2 mt-4">
-    <div class="flex items-center justify-between mb-4 mx-4 lg:mx-24">
-      <div class="flex space-x-2">
-        <button @click="selectPreviousCategory"
-                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-600 rounded-md focus:outline-hidden focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 disabled:opacity-50">
-          Zurück
-        </button>
-        <button @click="selectNextCategory"
-                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-600 rounded-md focus:outline-hidden focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 disabled:opacity-50"
-                :disabled="forwardHistory.length === 0">
-          Vorwärts
-        </button>
-      </div>
+    <template v-if="backwardsHistory.length || forwardHistory.length">
+    <div class="flex space-x-2 mr-4 lg:mr-24">
+      <button @click="selectPreviousCategory"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-600 rounded-md focus:outline-hidden focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 disabled:opacity-50">
+        Zurück
+      </button>
+      <button @click="selectNextCategory"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-600 rounded-md focus:outline-hidden focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 disabled:opacity-50"
+              :disabled="forwardHistory.length === 0">
+        Vorwärts
+      </button>
     </div>
+    </template>
   </div>
-  </template>
+
 
   <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
     <div class="grid grid-cols-1 lg:grid-cols-4 mt-4 pb-12">
