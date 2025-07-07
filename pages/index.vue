@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {
-  MarketItemLogsResponse,
-  PlayerVehicle,
+  MarketItemLogsResponse, PlayerVehicle,
   PlayerVehiclesResponse,
   Vehicle,
   VehicleResponse,
@@ -17,10 +16,11 @@ import {ChevronDownIcon} from '@heroicons/vue/16/solid';
 import {HomeIcon, ShieldCheckIcon, TruckIcon} from '@heroicons/vue/20/solid';
 import TextInput from "~/components/TextInput.vue";
 import {vAutoAnimate} from "@formkit/auto-animate/vue";
+import Farmroute from "~/components/Farmroute.vue";
 
 const playerAPIToken = ref<string>('')
 const playerAPITokenError = ref<string | null>(null)
-const playerVehicles = ref<Vehicle[]>([])
+const playerVehicles = ref<Vehicle[] | null>(null)
 
 const backpackSize = ref<number>(0)
 
@@ -60,7 +60,7 @@ const fullSelectedVehicle = computed<Vehicle | null>(() => {
     return null;
   }
 
-  return vehicles.value?.find(v => v.id === selectedVehicle.value?.id) || playerVehicles.value.find(v => v.id === selectedVehicle.value?.id) || null;
+  return vehicles.value?.find(v => v.id === selectedVehicle.value?.id) || playerVehicles.value?.find(v => v.id === selectedVehicle.value?.id) || null;
 })
 
 onMounted(() => {
@@ -106,7 +106,7 @@ const fetchGarage = () => {
 
 watch(playerAPIToken, () => {
   playerAPITokenError.value = null;
-  playerVehicles.value = [];
+  playerVehicles.value = null;
 })
 
 watch(tabs, () => {
@@ -223,89 +223,97 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
 
 
         <div class="col-span-2" v-show="selectedTab?.name === 'Shops'">
-              <ComboboxWithImage
-                  tabindex="1"
-                  label="Shop auswählen"
-                  :items="vehicleShopTypes.map((vehicleShopType: VehicleShopType) => ({
+          <ComboboxWithImage
+              tabindex="1"
+              label="Shop auswählen"
+              :items="vehicleShopTypes.map((vehicleShopType: VehicleShopType) => ({
           id: vehicleShopType.shoptype,
           name: vehicleShopType.shopname
         }))"
-                  v-model="selectedShopType"
-              />
+              v-model="selectedShopType"
+          />
 
-              <p class="mt-2 text-sm text-gray-500">
-                Wähle einen Shop aus, um die verfügbaren Fahrzeuge zu sehen.
-              </p>
+          <p class="mt-2 text-sm text-gray-500">
+            Wähle einen Shop aus, um die verfügbaren Fahrzeuge zu sehen.
+          </p>
 
-              <template v-if="loadingShopTypes">
-                <p class="mt-2 text-sm text-gray-500">Lade Shoptypen...</p>
+          <template v-if="loadingShopTypes">
+            <p class="mt-2 text-sm text-gray-500">Lade Shoptypen...</p>
+          </template>
+
+          <ComboboxWithImage
+              tabindex="2"
+              class="mt-8"
+              label="Fahrzeug auswählen"
+              :items="vehicles.map((vehicle: Vehicle) => ({
+          id: vehicle.id,
+          name: vehicle.name + ' (' + vehicle.v_space.toLocaleString() + ' kg)',
+        }))"
+              v-model="selectedVehicle"
+          />
+          <p class="mt-2 text-sm text-gray-500">
+            Wähle ein Fahrzeug aus, um die Details zu sehen.
+          </p>
+
+          <template v-if="loadingVehicles">
+            <p class="mt-2 text-sm text-gray-500">Lade Fahrzeuge...</p>
+          </template>
+
+          <template v-if="selectedVehicle && fullSelectedVehicle">
+            <div class="mt-8">
+              <h3 class="text-sm font-semibold">Details zum Fahrzeug</h3>
+              <p class="mt-2 text-sm text-gray-500 truncate">Name: {{ fullSelectedVehicle.name }}</p>
+              <p class="text-sm text-gray-500 truncate">Kapazität: {{
+                  fullSelectedVehicle.v_space.toLocaleString()
+                }}
+                Einheiten</p>
+              <p class="text-sm text-gray-500 truncate">Preis: {{ fullSelectedVehicle.price.toLocaleString() }}
+                €</p>
+            </div>
+          </template>
+        </div>
+        <div class="col-span-2" v-show="selectedTab?.name === 'Garage'">
+          <div>
+            <TextInput
+                v-model="playerAPIToken"
+                label="API Token"
+                placeholder="Gib deinen API Token ein"
+                description="Niemand außer dir kann diesen Token sehen. Er wird benötigt, um deine Fahrzeuge zu laden, verlässt dabei aber niemals deinen Browser."
+                type="text"
+                id="api-token-input"
+                @keydown.enter="fetchGarage"
+            />
+
+            <template v-if="playerVehicles === null">
+              <button :disabled="loadingVehicles" @click="fetchGarage" type="button"
+                      class="mt-4 inline-flex items-center gap-x-2 rounded-md bg-panthor-red px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-panthor-red/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-panthor-red">
+                <ShieldCheckIcon class="-ml-0.5 size-5" aria-hidden="true"/>
+                Fahrzeuge laden
+              </button>
+
+              <template v-if="playerAPITokenError">
+                <p class="mt-2 text-sm text-red-500 leading-tight">{{ playerAPITokenError }}</p>
               </template>
+            </template>
 
+            <template v-else-if="playerVehicles.length === 0">
+              <p class="mt-2 text-sm text-red-500 leading-tight">Du hast keine Fahrzeuge in deiner Zivilistengarage.</p>
+            </template>
+
+            <template v-else>
               <ComboboxWithImage
                   tabindex="2"
                   class="mt-8"
                   label="Fahrzeug auswählen"
-                  :items="vehicles.map((vehicle: Vehicle) => ({
+                  :items="playerVehicles.map((vehicle: Vehicle) => ({
           id: vehicle.id,
           name: vehicle.name + ' (' + vehicle.v_space.toLocaleString() + ' kg)',
         }))"
                   v-model="selectedVehicle"
               />
-              <p class="mt-2 text-sm text-gray-500">
-                Wähle ein Fahrzeug aus, um die Details zu sehen.
-              </p>
-
-              <template v-if="loadingVehicles">
-                <p class="mt-2 text-sm text-gray-500">Lade Fahrzeuge...</p>
-              </template>
-
-              <template v-if="selectedVehicle && fullSelectedVehicle">
-                <div class="mt-8">
-                  <h3 class="text-sm font-semibold">Details zum Fahrzeug</h3>
-                  <p class="mt-2 text-sm text-gray-500 truncate">Name: {{ fullSelectedVehicle.name }}</p>
-                  <p class="text-sm text-gray-500 truncate">Kapazität: {{
-                      fullSelectedVehicle.v_space.toLocaleString()
-                    }}
-                    Einheiten</p>
-                  <p class="text-sm text-gray-500 truncate">Preis: {{ fullSelectedVehicle.price.toLocaleString() }}
-                    €</p>
-                </div>
-              </template>
-            </div>
-        <div class="col-span-2" v-show="selectedTab?.name === 'Garage'">
-              <div>
-                <TextInput
-                    v-model="playerAPIToken"
-                    label="API Token"
-                    placeholder="Gib deinen API Token ein"
-                    description="Niemand außer dir kann diesen Token sehen. Er wird benötigt, um deine Fahrzeuge zu laden, verlässt dabei aber niemals deinen Browser."
-                    type="text"
-                    id="api-token-input"
-                    @keydown.enter="fetchGarage"
-                />
-
-                <template v-if="!playerVehicles.length">
-                  <button :disabled="loadingVehicles" @click="fetchGarage" type="button"
-                          class="mt-4 inline-flex items-center gap-x-2 rounded-md bg-panthor-red px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-panthor-red/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-panthor-red">
-                    <ShieldCheckIcon class="-ml-0.5 size-5" aria-hidden="true"/>
-                    Fahrzeuge laden
-                  </button>
-                </template>
-                <template v-else>
-
-                  <ComboboxWithImage
-                      tabindex="2"
-                      class="mt-8"
-                      label="Fahrzeug auswählen"
-                      :items="playerVehicles.map((vehicle: Vehicle) => ({
-          id: vehicle.id,
-          name: vehicle.name + ' (' + vehicle.v_space.toLocaleString() + ' kg)',
-        }))"
-                      v-model="selectedVehicle"
-                  />
-                </template>
-              </div>
-            </div>
+            </template>
+          </div>
+        </div>
 
         <hr class="my-8 border-gray-200">
 
@@ -325,34 +333,7 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
         <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6" v-auto-animate>
           <h2 class="text-lg font-semibold text-panthor-red">Farmroute</h2>
 
-          <template v-for="(productionStep, productionStepX) in productionSteps"
-                    :key="selectedMarketItem.id + '' + productionStepX">
-            <div class="my-8 p-2 border-1 border-panthor-red">
-              <p class="text-lg text-panthor-red font-semibold">{{ productionStepX + 1 }}. Schritt</p>
-
-              <ul class="space-y-2 my-2">
-                <template v-for="(inputMaterial, inputMaterialX) in productionStep.inputMaterials"
-                          :key="selectedMarketItem.id + '' + inputMaterialX">
-                  <li class="text-gray-100">
-                    <dl>
-                      <dt>{{ inputMaterial.localized_name }}<sup class="text-xs text-gray-500">({{
-                          inputMaterial.weight
-                        }}kg)</sup></dt>
-                      <dd class="text-xs text-gray-500">{{ inputMaterial.source }}</dd>
-                    </dl>
-                  </li>
-
-                  <template v-if="inputMaterialX < productionStep.inputMaterials.length - 1">
-                    <li class="text-gray-500">+</li>
-                  </template>
-                </template>
-              </ul>
-
-              <p class="text-gray-100 mt-8">zu {{ productionStep.output.localized_name }}<sup
-                  class="text-xs text-gray-500">({{ productionStep.output.weight }}kg)</sup> verarbeiten an folgendem
-                Ort: {{ productionStep.facility }}</p>
-            </div>
-          </template>
+          <Farmroute :product="farmroutes[selectedMarketItem.id]" class="mt-4"/>
 
           <template v-if="selectedVehicle  && selectedMarketItem">
             <template v-if="resultPrice === resultSize">

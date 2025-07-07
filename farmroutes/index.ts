@@ -15,7 +15,7 @@ import {windowProduction} from "~/farmroutes/window";
 import {ironBarProduction} from "~/farmroutes/iron_bar";
 import {chemicalsProduction} from "~/farmroutes/chemicals";
 import {aluminumBarProduction} from "~/farmroutes/alu_bar";
-import {copperBarProduction} from "~/farmroutes/copper_bar";
+import {copperBarProduction} from "~/farmroutes/copper_r";
 import {oilProduction} from "~/farmroutes/oil_r";
 import {plasticProduction} from "~/farmroutes/plastic";
 import {boardsProduction} from "~/farmroutes/wood_r";
@@ -44,6 +44,8 @@ import {ryeFlourProduction} from "~/farmroutes/rye_r";
 import {tissueProduction} from "~/farmroutes/tissue";
 import {wineProduction} from "~/farmroutes/wine_r";
 import {grapeJuiceProduction} from "~/farmroutes/grape_juice";
+import {rubberProduction} from "~/farmroutes/rubber";
+import {titaniumBarProduction} from "~/farmroutes/titanium_r";
 
 interface Farmroutes {
     [key: string]: GenericProduction;
@@ -95,5 +97,6 @@ export const farmroutes: Farmroutes = {
     rye_r: ryeFlourProduction,
     tissue: tissueProduction,
     wine_r: wineProduction,
-
+    rubber: rubberProduction,
+    titanium_r: titaniumBarProduction,
 }

@@ -3,7 +3,7 @@
     <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div class="flex flex-1">
         <div class="hidden lg:flex lg:gap-x-12">
-          <NuxtLink v-for="item in navigation" :key="item.name" :to="item.href" :target="item.target" class="text-sm/6 font-semibold text-gray-100">{{ item.name }}</NuxtLink>
+          <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to" :target="item.target" class="text-sm/6 font-semibold text-gray-100">{{ item.name }}</NuxtLink>
         </div>
         <div class="flex lg:hidden">
           <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-300" @click="mobileMenuOpen = true">
@@ -17,7 +17,7 @@
         <NuxtImg class="h-8 w-auto" src="/images/panthor_logo.png" alt="Panthor" />
       </NuxtLink>
       <div class="flex flex-1 justify-end">
-        <a href="https://panthor.de" target="_blank" class="text-sm/6 font-semibold text-gray-100">Offizielle Website <span aria-hidden="true">&rarr;</span></a>
+        <a to="https://panthor.de" target="_blank" class="text-sm/6 font-semibold text-gray-100">Offizielle Website <span aria-hidden="true">&rarr;</span></a>
       </div>
     </nav>
     <Dialog class="lg:hidden" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="mt-6 space-y-2">
-          <NuxtLink v-for="item in navigation" :key="item.name" :to="item.href" :target="item.target" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-100 hover:bg-white/10">{{ item.name }}</NuxtLink>
+          <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to" :target="item.target" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-100 hover:bg-white/10">{{ item.name }}</NuxtLink>
         </div>
       </DialogPanel>
     </Dialog>
@@ -51,10 +51,10 @@ import { Dialog, DialogPanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 const navigation = [
-  { name: 'GitHub', href: 'https://github.com/MarvinVomberg/panthor-farmrechner', target: '_blank' },
-  { name: 'Bugreport', href: 'https://github.com/MarvinVomberg/panthor-farmrechner/issues/new', target: '_blank' },
-  { name: 'Rechner', href: '/', target: '_self' },
-  { name: 'Live-Markt', href: '/market', target: '_self' },
+  { name: 'GitHub', to: 'https://github.com/MarvinVomberg/panthor-farmrechner', target: '_blank' },
+  { name: 'Rechner', to: '/', target: '_self' },
+  { name: 'Live-Markt', to: '/market', target: '_self' },
+  { name: 'Crafting', to: '/crafting', target: '_self' },
 ]
 
 const mobileMenuOpen = ref(false)

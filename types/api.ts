@@ -1,6 +1,3 @@
-import _default from "@speed-highlight/core/common";
-import num = _default.num;
-
 export interface VehicleShopType {
     shoptype: string,
     shopname: string
