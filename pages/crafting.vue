@@ -55,8 +55,8 @@ const selectNextCategory = () => {
 
 <template>
   <div class="mx-auto w-full max-w-7xl grow lg:flex justify-between xl:px-2 mt-4">
-    <nav class="flex mx-4 lg:mx-24" aria-label="Breadcrumb">
-      <ol role="list" class="flex items-center space-x-4">
+    <nav class="hidden lg:flex mx-4 lg:mx-24" aria-label="Breadcrumb">
+      <ol role="list" class="flex items-center space-x-4 truncate">
         <li>
           <div>
             <p class="text-gray-400 hover:text-gray-300">
@@ -97,7 +97,7 @@ const selectNextCategory = () => {
     </nav>
 
     <template v-if="backwardsHistory.length || forwardHistory.length">
-    <div class="flex space-x-2 mr-4 lg:mr-24">
+    <div class="flex space-x-2 ml-4 mt-4 lg:mt-0 lg:mr-24">
       <button @click="selectPreviousCategory"
               class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-600 rounded-md focus:outline-hidden focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 disabled:opacity-50">
         Zurück
