@@ -9,12 +9,12 @@ import {door} from "~/items/door";
 const step1 = new ProcessingStep("Hochofen/Erzhütte", [iron_ore], iron_bar, 3, 3, new Product("Eisenbarren", "Iron Bar", [], 3));
 const step2 = new ProcessingStep("Sägewerk", [wood], wood_r, 4, 4, new Product("Bretter", "Boards", [], 4));
 const step3 = new ProcessingStep("Montagefabrik", [iron_bar, wood_r], door, 5, 5,
-    new Product("Tür", "Door", [], 5, "Exporthändler"));
+    new Product("door", "Tür", [], 5, "Exporthändler"));
 
 // Gesamte Produktion
 export const doorProduction = new GenericProduction(
+    "door",
     "Tür",
-    "Door",
     [iron_ore, wood],
     [step1, step2, step3],
     5,
