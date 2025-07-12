@@ -15,7 +15,7 @@ import {Sand_65mm_20_Round} from "~/crafting/weapon/magazine/Sand_65mm_20_Round"
 import {Tracer_556mm_30_Round} from "~/crafting/weapon/magazine/Tracer_556mm_30_Round";
 import {WM_300_5_Round} from "~/crafting/weapon/magazine/WM_300_5_Round";
 import {CraftCategory} from "~/types/crafting";
-import {weaponsCategory} from "~/crafting/weapon";
+import {weaponsCraftingCategory} from "~/crafting/weapon";
 import {CircleStackIcon} from "@heroicons/vue/16/solid";
 
 export const weaponMagazinesCategory = new CraftCategory(
@@ -43,6 +43,6 @@ export const weaponMagazinesCategory = new CraftCategory(
         Tracer_556mm_30_Round,
         WM_300_5_Round,
     ],
-    weaponsCategory,
+    weaponsCraftingCategory,
     10
 )

@@ -7,7 +7,7 @@ import {SilencerCase} from "~/crafting/weapon/parts/SilencerCase";
 import {SilencerThread} from "~/crafting/weapon/parts/SilencerThread";
 import {WeaponStock} from "~/crafting/weapon/parts/WeaponStock";
 import {CraftCategory} from "~/types/crafting";
-import {weaponsCategory} from "~/crafting/weapon";
+import {weaponsCraftingCategory} from "~/crafting/weapon";
 import {WrenchScrewdriverIcon} from "@heroicons/vue/16/solid";
 
 export const weaponPartsCategory = new CraftCategory(
@@ -27,5 +27,5 @@ export const weaponPartsCategory = new CraftCategory(
         SilencerThread,
         WeaponStock
     ],
-    weaponsCategory
+    weaponsCraftingCategory
 )
