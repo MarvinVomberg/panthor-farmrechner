@@ -6,6 +6,7 @@ import {weaponBulletsCategory} from "~/crafting/weapon/bullets";
 import {vehiclesCategory} from "~/crafting/vehicle";
 import {vehiclePartsCategory} from "~/crafting/vehicle/parts";
 import {tuningChipsCategory} from "~/crafting/vehicle/chips";
+import {fuelstationCategory} from "~/crafting/fuel_station";
 
 export const craftingCategories = [
     weaponsCategory,
@@ -16,4 +17,5 @@ export const craftingCategories = [
     vehiclesCategory,
     vehiclePartsCategory,
     tuningChipsCategory,
+    fuelstationCategory,
 ]
