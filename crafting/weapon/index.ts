@@ -1,8 +1,8 @@
 import {CraftCategory} from "~/types/crafting";
 import {FireIcon} from "@heroicons/vue/16/solid";
 
-export const weaponsCategory = new CraftCategory(
-    'weapons',
+export const weaponsCraftingCategory = new CraftCategory(
+    'weapons_category',
     'Waffenbau',
     'Waffen, Waffenaufsätze, Magazine und Munition',
     FireIcon,

@@ -7,7 +7,7 @@ import {oilProduction} from "~/farmroutes/oil_r";
 export const EnginePart = new CraftItem(
     'engine_part',
     'Motorenteil',
-    10,
+    1,
     [
         new CraftMaterial(12, ironBarProduction),
         new CraftMaterial(5, steelBarProduction),
