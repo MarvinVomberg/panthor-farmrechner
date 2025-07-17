@@ -6,6 +6,7 @@ import {weaponBulletsCategory} from "~/crafting/weapon/bullets";
 import {vehiclesCategory} from "~/crafting/vehicle";
 import {vehiclePartsCategory} from "~/crafting/vehicle/parts";
 import {tuningChipsCategory} from "~/crafting/vehicle/chips";
+import {fuelstationCategory} from "~/crafting/fuel_station";
 import {weaponsCategory} from "~/crafting/weapon/weapons";
 import {ganghouseWeaponsCategory} from "~/crafting/weapon/weapons/ganghouse";
 import {truckCategory} from "~/crafting/vehicle/truck";
@@ -20,8 +21,10 @@ import {
     jaguarCategory,
     lamborghiniCategory,
     mercedesCategory,
-    nissanCategory, otherVehicleCategory,
-    porscheCategory, toyotaCategory,
+    nissanCategory,
+    otherVehicleCategory,
+    porscheCategory,
+    toyotaCategory,
     vwCategory
 } from "~/crafting/vehicle/cars";
 
@@ -51,5 +54,6 @@ export const craftingCategories = [
     toyotaCategory,
     otherVehicleCategory,
     tuningChipsCategory,
+    fuelstationCategory,
     truckCategory,
-]
+];
