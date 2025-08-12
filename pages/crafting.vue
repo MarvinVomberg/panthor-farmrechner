@@ -12,7 +12,10 @@ const selectedItem = ref<CraftItem | null>(null);
 const selectedFarmroute = ref<GenericProduction | null>(null);
 
 const selectCategory = (categoryName: string, clearHistory: boolean = false) => {
-  backwardsHistory.value.push(selectedCategory.value);
+  // Only add to history if we have a current category
+  if (selectedCategory.value) {
+    backwardsHistory.value.push(selectedCategory.value);
+  }
   selectedCategory.value = craftingCategories.find(cat => cat.name === categoryName) || null;
   selectedItem.value = null;
   selectedFarmroute.value = null;
@@ -37,20 +40,100 @@ const childCategories = computed(() => {
   return craftingCategories.filter((category) => category.parentCategory?.name === selectedCategory.value?.name);
 });
 
-const backwardsHistory = ref<CraftCategory[]|null[]>([]);
-const forwardHistory = ref<CraftCategory[]|null[]>([]);
+const backwardsHistory = ref<(CraftCategory | null)[]>([]);
+const forwardHistory = ref<(CraftCategory | null)[]>([]);
 const selectPreviousCategory = () => {
   forwardHistory.value.push(selectedCategory.value)
 
   if (backwardsHistory.value.length > 0) {
-    selectedCategory.value = backwardsHistory.value.pop();
+    selectedCategory.value = backwardsHistory.value.pop() || null;
     selectedItem.value = null;
     selectedFarmroute.value = null;
   }
 }
 
 const selectNextCategory = () => {
-  selectCategory(forwardHistory.value.pop().name, false)
+  if (forwardHistory.value.length > 0) {
+    const nextCategory = forwardHistory.value.pop();
+    if (nextCategory) {
+      selectCategory(nextCategory.name, false);
+    }
+  }
+}
+
+// Breadcrumb navigation system
+const breadcrumbs = computed(() => {
+  const crumbs = [];
+  
+  // Add home
+  crumbs.push({ type: 'home', label: 'Start', action: () => navigateToHome() });
+  
+  // Add history categories
+  if (backwardsHistory.value.length > 0) {
+    backwardsHistory.value.forEach((category, index) => {
+      if (category) {
+        crumbs.push({
+          type: 'category',
+          label: category.localized,
+          category: category,
+          action: () => navigateToCategory(category as CraftCategory)
+        });
+      }
+    });
+  }
+  
+  // Add current category
+  if (selectedCategory.value) {
+    crumbs.push({
+      type: 'current-category',
+      label: selectedCategory.value.localized,
+      category: selectedCategory.value,
+      action: null // Current category is not clickable
+    });
+  }
+  
+  // Add selected item
+  if (selectedItem.value) {
+    crumbs.push({
+      type: 'item',
+      label: selectedItem.value.localized,
+      item: selectedItem.value,
+      action: () => clearItemSelection()
+    });
+  }
+  
+  return crumbs;
+});
+
+const navigateToHome = () => {
+  selectedCategory.value = null;
+  selectedItem.value = null;
+  selectedFarmroute.value = null;
+  backwardsHistory.value = [];
+  forwardHistory.value = [];
+}
+
+const navigateToCategory = (targetCategory: CraftCategory) => {
+  // Find the position of the target category in backwards history
+  const targetIndex = backwardsHistory.value.findIndex(cat => cat?.name === targetCategory.name);
+  
+  if (targetIndex !== -1) {
+    // Move categories after the target (including current) to forward history
+    const categoriesToMove = backwardsHistory.value.splice(targetIndex + 1);
+    if (selectedCategory.value) {
+      forwardHistory.value = [selectedCategory.value, ...categoriesToMove, ...forwardHistory.value];
+    }
+    
+    // Set the target category as current (don't add to history again)
+    selectedCategory.value = targetCategory;
+    selectedItem.value = null;
+    selectedFarmroute.value = null;
+  }
+}
+
+const clearItemSelection = () => {
+  selectedItem.value = null;
+  selectedFarmroute.value = null;
 }
 </script>
 
@@ -73,24 +156,47 @@ const selectNextCategory = () => {
           <div class="flex items-center space-x-4">
             <!-- Breadcrumb Navigation -->
             <nav class="hidden lg:flex" aria-label="Breadcrumb">
-              <ol class="flex items-center space-x-2">
-                <li>
-                  <HomeIcon class="h-5 w-5 text-gray-400" />
-                </li>
-                <template v-if="backwardsHistory.length">
-                  <li v-for="(category, index) in Array.from(backwardsHistory).reverse().slice(-2)" :key="index" class="flex items-center">
-                    <ChevronRightIcon class="h-4 w-4 text-gray-500 mx-2" />
-                    <span class="text-sm text-gray-400">{{ category?.localized || 'Kategorien' }}</span>
+              <ol class="flex items-center space-x-1">
+                <template v-for="(crumb, index) in breadcrumbs" :key="index">
+                  <li class="flex items-center">
+                    <!-- Separator (except for first item) -->
+                    <ChevronRightIcon v-if="index > 0" class="h-4 w-4 text-gray-500 mx-2" />
+                    
+                    <!-- Home icon -->
+                    <button 
+                      v-if="crumb.type === 'home'"
+                      @click="crumb.action"
+                      class="p-1 rounded-lg hover:bg-gray-700/50 transition-colors duration-200 group"
+                      title="Zur Hauptseite">
+                      <HomeIcon class="h-5 w-5 text-gray-400 group-hover:text-panthor-red transition-colors duration-200" />
+                    </button>
+                    
+                    <!-- Clickable category breadcrumb -->
+                    <button 
+                      v-else-if="crumb.type === 'category' && crumb.action"
+                      @click="crumb.action!"
+                      class="text-sm text-gray-400 hover:text-panthor-red transition-colors duration-200 px-2 py-1 rounded-lg hover:bg-gray-700/30"
+                      :title="`Zu ${crumb.label} navigieren`">
+                      {{ crumb.label }}
+                    </button>
+                    
+                    <!-- Current category (not clickable) -->
+                    <span 
+                      v-else-if="crumb.type === 'current-category'"
+                      class="text-sm text-panthor-red font-medium px-2 py-1">
+                      {{ crumb.label }}
+                    </span>
+                    
+                    <!-- Clickable item breadcrumb -->
+                    <button 
+                      v-else-if="crumb.type === 'item' && crumb.action"
+                      @click="crumb.action!"
+                      class="text-sm text-gray-300 hover:text-white transition-colors duration-200 px-2 py-1 rounded-lg hover:bg-gray-700/30"
+                      title="Item-Auswahl zurücksetzen">
+                      {{ crumb.label }}
+                    </button>
                   </li>
                 </template>
-                <li v-if="selectedCategory" class="flex items-center">
-                  <ChevronRightIcon class="h-4 w-4 text-gray-500 mx-2" />
-                  <span class="text-sm text-panthor-red font-medium">{{ selectedCategory.localized }}</span>
-                </li>
-                <li v-if="selectedItem" class="flex items-center">
-                  <ChevronRightIcon class="h-4 w-4 text-gray-500 mx-2" />
-                  <span class="text-sm text-gray-300">{{ selectedItem.localized }}</span>
-                </li>
               </ol>
             </nav>
 
@@ -185,9 +291,24 @@ const selectNextCategory = () => {
               </div>
             </div>
           </template>
+
+          <!-- Farmroute Details -->
+          <template v-if="selectedFarmroute">
+            <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
+              <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center">
+                  <TruckIcon class="mr-2 size-5 text-panthor-red" />
+                  Farmroute für {{ selectedFarmroute.productLocalizedName }}
+                </h3>
+                <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
+              </div>
+
+              <Farmroute :product="selectedFarmroute"/>
+            </div>
+          </template>
         </div>
 
-        <!-- Right Panel: Item Details & Farmroute -->
+        <!-- Right Panel: Item Details -->
         <div class="lg:col-span-4 space-y-6" v-auto-animate>
           <!-- Item Details -->
           <template v-if="selectedItem">
@@ -210,7 +331,7 @@ const selectNextCategory = () => {
                           {{ material.requiredItem.productLocalizedName }}
                         </template>
                         <template v-else>
-                          {{ material.requiredItem.localized }}
+                          {{ material.requiredItem?.localized }}
                         </template>
                       </p>
                       <p class="text-sm text-gray-400">{{ material.amount }} Einheit(en)</p>
@@ -229,28 +350,13 @@ const selectNextCategory = () => {
             </div>
           </template>
 
-          <!-- Farmroute Details -->
-          <template v-if="selectedFarmroute">
-            <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
-              <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center">
-                  <TruckIcon class="mr-2 size-5 text-panthor-red" />
-                  Farmroute für {{ selectedFarmroute.productLocalizedName }}
-                </h3>
-                <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
-              </div>
-
-              <Farmroute :product="selectedFarmroute"/>
-            </div>
-          </template>
-
           <!-- Empty State -->
-          <template v-if="!selectedItem && !selectedFarmroute">
+          <template v-if="!selectedItem">
             <div class="bg-gradient-to-br from-gray-800/50 to-gray-900/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-600/30 shadow-2xl">
               <div class="text-center">
                 <CubeIcon class="mx-auto h-12 w-12 text-gray-400 mb-4" />
                 <h3 class="text-lg font-semibold text-gray-300 mb-2">Wähle ein Item</h3>
-                <p class="text-gray-400">Wähle ein Item aus, um die benötigten Materialien und Farmrouten zu sehen.</p>
+                <p class="text-gray-400">Wähle ein Item aus, um die benötigten Materialien zu sehen.</p>
               </div>
             </div>
           </template>
