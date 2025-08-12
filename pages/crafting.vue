@@ -264,7 +264,7 @@ const clearItemSelection = () => {
 
           <!-- Items Grid -->
           <template v-if="selectedCategory?.items?.length">
-            <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
+            <div class="mt-6 bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
               <div class="mb-6">
                 <h2 class="text-xl font-bold text-gray-200 mb-2">Verfügbare Items</h2>
                 <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
@@ -294,7 +294,7 @@ const clearItemSelection = () => {
 
           <!-- Farmroute Details -->
           <template v-if="selectedFarmroute">
-            <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
+            <div class="mt-6 bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
               <div class="mb-6">
                 <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center">
                   <TruckIcon class="mr-2 size-5 text-panthor-red" />
