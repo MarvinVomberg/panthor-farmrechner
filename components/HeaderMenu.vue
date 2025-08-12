@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white/10">
+  <header class="header-glass sticky top-0 z-50">
     <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div class="flex flex-1">
         <div class="hidden lg:flex lg:gap-x-12">
@@ -7,7 +7,7 @@
         </div>
         <div class="flex lg:hidden">
           <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-300" @click="mobileMenuOpen = true">
-            <span class="sr-only">Open main menu</span>
+            <span class="sr-only">Hauptmenü öffnen</span>
             <Bars3Icon class="size-6" aria-hidden="true" />
           </button>
         </div>
@@ -17,16 +17,16 @@
         <NuxtImg class="h-8 w-auto" src="/images/panthor_logo.png" alt="Panthor" />
       </NuxtLink>
       <div class="flex flex-1 justify-end">
-        <a to="https://panthor.de" target="_blank" class="text-sm/6 font-semibold text-gray-100">Offizielle Website <span aria-hidden="true">&rarr;</span></a>
+        <a href="https://panthor.de" target="_blank" class="text-sm/6 font-semibold text-gray-100">Offizielle Website <span aria-hidden="true">&rarr;</span></a>
       </div>
     </nav>
     <Dialog class="lg:hidden" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
       <div class="fixed inset-0 z-10" />
-      <DialogPanel class="fixed inset-y-0 left-0 z-10 w-full overflow-y-auto bg-dark px-6 py-6">
+      <DialogPanel class="fixed inset-y-0 left-0 z-10 w-full overflow-y-auto bg-gray-900/95 backdrop-blur-xl px-6 py-6 border-r border-gray-700/50">
         <div class="flex items-center justify-between">
           <div class="flex flex-1">
             <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-300" @click="mobileMenuOpen = false">
-              <span class="sr-only">Close menu</span>
+              <span class="sr-only">Menü schließen</span>
               <XMarkIcon class="size-6" aria-hidden="true" />
             </button>
           </div>

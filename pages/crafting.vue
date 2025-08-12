@@ -2,7 +2,7 @@
 import {craftingCategories} from "~/crafting/crafting";
 import {type CraftCategory, CraftItem} from "~/types/crafting";
 import {GenericProduction} from "~/farmroutes/production";
-import {TruckIcon, HomeIcon} from "@heroicons/vue/16/solid";
+import {TruckIcon, HomeIcon, ChevronLeftIcon, ChevronRightIcon, CubeIcon, WrenchScrewdriverIcon} from "@heroicons/vue/20/solid";
 import {vAutoAnimate} from "@formkit/auto-animate/vue";
 
 const mainCategories = craftingCategories.filter((category) => category.parentCategory === null);
@@ -55,149 +55,209 @@ const selectNextCategory = () => {
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-7xl grow lg:flex justify-between xl:px-2 mt-4">
-    <nav class="hidden lg:flex mx-4 lg:mx-24" aria-label="Breadcrumb">
-      <ol role="list" class="flex items-center space-x-4 truncate">
-        <li>
+  <div class="mx-auto w-full max-w-[100rem] grow mt-6 relative z-10">
+    <!-- Header Section -->
+    <div class="px-6 sm:px-8 lg:px-12 xl:px-16 mb-8">
+      <div class="bg-gradient-to-br from-gray-900/70 to-gray-800/50 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/40 shadow-2xl">
+        <div class="flex items-center justify-between">
+          <!-- Title -->
           <div>
-            <p class="text-gray-400 hover:text-gray-300">
-              <span class="sr-only">Home</span>
-              <HomeIcon class="h-5 w-5" aria-hidden="true"/>
-            </p>
+            <h1 class="text-3xl font-bold text-gray-200 flex items-center">
+              <WrenchScrewdriverIcon class="mr-3 size-8 text-panthor-red" />
+              Crafting-Übersicht
+            </h1>
+            <p class="text-gray-400 mt-2">Entdecke alle verfügbaren Crafting-Rezepte und Materialien</p>
           </div>
-        </li>
-        <template v-if="backwardsHistory">
-        <li v-for="(category, index) in Array.from(backwardsHistory).reverse()" :key="index">
-          <div class="flex items-center">
-            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 19.5l-6-6m0 0l6-6m-6 6h18"/>
-            </svg>
-            <p class="ml-4 text-sm font-medium text-gray-200 hover:text-gray-300 focus:outline-hidden">
-              {{ category?.localized ?? selectedCategory?.localized }}
-            </p>
-          </div>
-        </li>
-        </template>
-        <li v-if="selectedItem">
-          <div class="flex items center">
-            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 19.5l-6-6m0 0l6-6m-6 6h18"/>
-            </svg>
-            <span class="ml-4 text-sm font-medium text-gray-200">{{ selectedItem.localized }}</span>
-          </div>
-        </li>
-        <li v-if="selectedFarmroute">
-          <div class="flex items center">
-            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 19.5l-6-6m0 0l6-6m-6 6h18"/>
-            </svg>
-            <span class="ml-4 text-sm font-medium text-gray-200">{{ selectedFarmroute.productLocalizedName }}</span>
-          </div>
-        </li>
-      </ol>
-    </nav>
 
-    <template v-if="backwardsHistory.length || forwardHistory.length">
-    <div class="flex space-x-2 ml-4 mt-4 lg:mt-0 lg:mr-24">
-      <button @click="selectPreviousCategory"
-              class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-600 rounded-md focus:outline-hidden focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 disabled:opacity-50">
-        Zurück
-      </button>
-      <button @click="selectNextCategory"
-              class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-600 rounded-md focus:outline-hidden focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 disabled:opacity-50"
-              :disabled="forwardHistory.length === 0">
-        Vorwärts
-      </button>
-    </div>
-    </template>
-  </div>
+          <!-- Navigation Controls -->
+          <div class="flex items-center space-x-4">
+            <!-- Breadcrumb Navigation -->
+            <nav class="hidden lg:flex" aria-label="Breadcrumb">
+              <ol class="flex items-center space-x-2">
+                <li>
+                  <HomeIcon class="h-5 w-5 text-gray-400" />
+                </li>
+                <template v-if="backwardsHistory.length">
+                  <li v-for="(category, index) in Array.from(backwardsHistory).reverse().slice(-2)" :key="index" class="flex items-center">
+                    <ChevronRightIcon class="h-4 w-4 text-gray-500 mx-2" />
+                    <span class="text-sm text-gray-400">{{ category?.localized || 'Kategorien' }}</span>
+                  </li>
+                </template>
+                <li v-if="selectedCategory" class="flex items-center">
+                  <ChevronRightIcon class="h-4 w-4 text-gray-500 mx-2" />
+                  <span class="text-sm text-panthor-red font-medium">{{ selectedCategory.localized }}</span>
+                </li>
+                <li v-if="selectedItem" class="flex items-center">
+                  <ChevronRightIcon class="h-4 w-4 text-gray-500 mx-2" />
+                  <span class="text-sm text-gray-300">{{ selectedItem.localized }}</span>
+                </li>
+              </ol>
+            </nav>
 
-
-  <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
-    <div class="grid grid-cols-1 lg:grid-cols-4 mt-4 pb-12">
-      <div class="col-span-1 lg:col-span-4">
-        <template v-if="!selectCategory || childCategories.length > 0">
-          <div class="overflow-hidden sm:grid sm:grid-cols-2 gap-12 mx-4 space-y-4 lg:mx-24 lg:space-y-0" >
-            <div v-for="(category, categoryIdx) in (selectedCategory === null ? mainCategories : childCategories)" :key="category.name"
-                 class="rounded-lg group relative cursor-pointer hover:bg-white/20 bg-white/10 p-6">
-              <div>
-                <span :class="[category.iconBackground, category.iconForeground, 'inline-flex rounded-lg p-3']">
-                  <component :is="category.icon" class="size-6" aria-hidden="true"/>
-                </span>
-              </div>
-              <div class="mt-8">
-                <h3 class="text-base font-semibold text-gray-100">
-                  <button @click="selectCategory(category.name, true)" class="focus:outline-hidden">
-                    <span class="absolute inset-0" aria-hidden="true"/>
-                    {{ category.localized }}
-                  </button>
-                </h3>
-                <p class="mt-2 text-sm text-gray-400">
-                  {{ category.description }}
-                </p>
-              </div>
+            <!-- History Controls -->
+            <div v-if="backwardsHistory.length || forwardHistory.length" class="flex space-x-2">
+              <button 
+                @click="selectPreviousCategory"
+                :disabled="!backwardsHistory.length"
+                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-800/60 rounded-xl border border-gray-600/40 hover:bg-gray-700/60 focus:outline-none focus:ring-2 focus:ring-panthor-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
+                <ChevronLeftIcon class="w-4 h-4 mr-1" />
+                Zurück
+              </button>
+              <button 
+                @click="selectNextCategory"
+                :disabled="!forwardHistory.length"
+                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-200 bg-gray-800/60 rounded-xl border border-gray-600/40 hover:bg-gray-700/60 focus:outline-none focus:ring-2 focus:ring-panthor-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
+                Vorwärts
+                <ChevronRightIcon class="w-4 h-4 ml-1" />
+              </button>
             </div>
           </div>
-        </template>
-
-        <template v-if="selectedCategory?.items?.length">
-          <div class="mt-4 mx-4 lg:mx-24">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" >
-              <div v-for="item in selectedCategory.items" :key="item.name"
-                   class="bg-white/10 hover:bg-white/20 rounded-lg p-4 cursor-pointer"
-                   :class="{'ring-2 ring-panthor-red': selectedItem?.name === item.name}"
-                   @click="selectItem(item.name)"
-              >
-                <h3 class="text-lg font-semibold text-gray-100">{{ item.localized }}</h3>
-                <p class="text-sm text-gray-400">Level {{ item.requiredLevel }} benötigt</p>
-              </div>
-            </div>
-          </div>
-        </template>
-
-        <template v-if="selectedItem">
-          <div class="mt-4 mx-4 lg:mx-24">
-              <h3 class="text-lg font-semibold text-gray-100">Folgende Materialien werden benötigt</h3>
-
-            <ul role="list" class="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3" >
-              <li v-for="(material, index) in selectedItem.materials" :key="index" class="col-span-1 flex rounded-md shadow-xs">
-                <div :class="['bg-panthor-red flex w-16 shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white']">&nbsp;</div>
-                <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200/10 bg-white/10">
-                  <div class="flex-1 truncate px-4 py-2 text-sm">
-                    <p class="font-medium text-gray-100 hover:text-gray-400">
-                      <template v-if="material?.requiredItem instanceof GenericProduction">
-                        {{ material.requiredItem.productLocalizedName }}
-                      </template>
-                      <template v-else>
-                        {{ material.requiredItem.localized }}
-                      </template>
-                    </p>
-                    <p class="text-gray-500">{{ material.amount }} Einheit(-en)</p>
-                  </div>
-                  <template v-if="material?.requiredItem instanceof GenericProduction">
-                  <div class="shrink-0 pr-2 ml-4">
-                    <button @click="selectFarmroute(material?.requiredItem)" type="button" class="inline-flex size-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 hover:cursor-pointer text-gray-300 hover:text-gray-200 focus:ring-2 focus:ring-panthor-red focus:ring-offset-2 focus:outline-hidden">
-                      <span class="sr-only">Show Farmroute</span>
-                      <TruckIcon class="size-5" aria-hidden="true" />
-                    </button>
-                  </div>
-                  </template>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </template>
-
-        <template v-if="selectedFarmroute">
-          <div class="col-span-1 lg:col-span-4 mt-8 mx-4 lg:mx-24" >
-            <Farmroute :product="selectedFarmroute"/>
-          </div>
-        </template>
+        </div>
       </div>
+    </div>
 
+    <!-- Main Content -->
+    <div class="px-6 sm:px-8 lg:px-12 xl:px-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Panel: Categories/Items -->
+        <div class="lg:col-span-8" v-auto-animate>
+          <!-- Category Grid -->
+          <template v-if="!selectedCategory || childCategories.length > 0">
+            <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
+              <div class="mb-6">
+                <h2 class="text-xl font-bold text-gray-200 mb-2">
+                  {{ selectedCategory ? 'Unterkategorien' : 'Kategorien' }}
+                </h2>
+                <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
+              </div>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div 
+                  v-for="category in (selectedCategory === null ? mainCategories : childCategories)" 
+                  :key="category.name"
+                  @click="selectCategory(category.name, true)"
+                  class="group bg-gradient-to-br from-gray-800/60 to-gray-900/40 backdrop-blur-sm rounded-2xl p-6 border border-gray-600/30 cursor-pointer hover:border-panthor-red/50 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                  
+                  <div class="flex items-center mb-4">
+                    <span :class="[category.iconBackground, category.iconForeground, 'inline-flex rounded-xl p-3 group-hover:scale-110 transition-transform duration-300']">
+                      <component :is="category.icon" class="size-6" />
+                    </span>
+                  </div>
+                  
+                  <h3 class="text-lg font-semibold text-gray-200 group-hover:text-white transition-colors duration-200">
+                    {{ category.localized }}
+                  </h3>
+                  <p class="mt-2 text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-200">
+                    {{ category.description }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <!-- Items Grid -->
+          <template v-if="selectedCategory?.items?.length">
+            <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
+              <div class="mb-6">
+                <h2 class="text-xl font-bold text-gray-200 mb-2">Verfügbare Items</h2>
+                <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
+              </div>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div 
+                  v-for="item in selectedCategory.items" 
+                  :key="item.name"
+                  @click="selectItem(item.name)"
+                  class="bg-gradient-to-br from-gray-800/50 to-gray-900/30 backdrop-blur-sm rounded-xl p-4 border border-gray-600/30 cursor-pointer hover:border-panthor-red/50 transition-all duration-200 hover:shadow-lg"
+                  :class="{'border-panthor-red bg-panthor-red/10': selectedItem?.name === item.name}">
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h3 class="font-semibold text-gray-200">{{ item.localized }}</h3>
+                      <p class="text-sm text-gray-400">Level {{ item.requiredLevel }} benötigt</p>
+                    </div>
+                    <div class="flex items-center justify-center w-8 h-8 bg-panthor-red/20 rounded-lg">
+                      <CubeIcon class="w-5 h-5 text-panthor-red" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Right Panel: Item Details & Farmroute -->
+        <div class="lg:col-span-4 space-y-6" v-auto-animate>
+          <!-- Item Details -->
+          <template v-if="selectedItem">
+            <div class="bg-gradient-to-br from-gray-900/70 to-gray-800/50 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/40 shadow-2xl">
+              <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-200 mb-2">Benötigte Materialien</h3>
+                <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
+              </div>
+
+              <div class="space-y-4">
+                <div 
+                  v-for="(material, index) in selectedItem.materials" 
+                  :key="index" 
+                  class="bg-gradient-to-r from-gray-800/60 to-gray-900/40 backdrop-blur-sm rounded-xl p-4 border border-gray-600/30">
+                  
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                      <p class="font-medium text-gray-200">
+                        <template v-if="material?.requiredItem instanceof GenericProduction">
+                          {{ material.requiredItem.productLocalizedName }}
+                        </template>
+                        <template v-else>
+                          {{ material.requiredItem.localized }}
+                        </template>
+                      </p>
+                      <p class="text-sm text-gray-400">{{ material.amount }} Einheit(en)</p>
+                    </div>
+                    
+                    <template v-if="material?.requiredItem instanceof GenericProduction">
+                      <button 
+                        @click="selectFarmroute(material?.requiredItem)" 
+                        class="ml-4 flex items-center justify-center w-10 h-10 bg-panthor-red/20 rounded-xl border border-panthor-red/30 hover:bg-panthor-red/30 hover:scale-105 transition-all duration-200 group">
+                        <TruckIcon class="w-5 h-5 text-panthor-red group-hover:text-white" />
+                      </button>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <!-- Farmroute Details -->
+          <template v-if="selectedFarmroute">
+            <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl">
+              <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center">
+                  <TruckIcon class="mr-2 size-5 text-panthor-red" />
+                  Farmroute für {{ selectedFarmroute.productLocalizedName }}
+                </h3>
+                <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
+              </div>
+
+              <Farmroute :product="selectedFarmroute"/>
+            </div>
+          </template>
+
+          <!-- Empty State -->
+          <template v-if="!selectedItem && !selectedFarmroute">
+            <div class="bg-gradient-to-br from-gray-800/50 to-gray-900/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-600/30 shadow-2xl">
+              <div class="text-center">
+                <CubeIcon class="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <h3 class="text-lg font-semibold text-gray-300 mb-2">Wähle ein Item</h3>
+                <p class="text-gray-400">Wähle ein Item aus, um die benötigten Materialien und Farmrouten zu sehen.</p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>

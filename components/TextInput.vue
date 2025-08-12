@@ -9,15 +9,15 @@ watch(inputValue, (value) => {
 defineProps({
   placeholder: {
     type: String,
-    default: 'Enter text here'
+    default: 'Text hier eingeben'
   },
   label: {
     type: String,
-    default: 'Label'
+    default: 'Bezeichnung'
   },
   description: {
     type: String,
-    default: 'Description text'
+    default: 'Beschreibungstext'
   },
   type: {
     type: String,
@@ -33,11 +33,11 @@ defineProps({
 
 <template>
     <div>
-      <label :for="id" class="block text-sm/6 font-medium text-gray-100">{{ label }}</label>
+      <label :for="id" class="block text-sm/6 font-medium text-gray-200">{{ label }}</label>
       <div class="mt-2">
-        <input v-model="inputValue" :type="type" :name="id" id="email" class="block w-full rounded-md bg-white/80 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-panthor-red sm:text-sm/6" :placeholder="placeholder" :aria-describedby="id + '-description'" />
+        <input v-model="inputValue" :type="type" :name="id" :id="id" class="block w-full rounded-xl bg-gray-800/90 backdrop-blur-sm px-3 py-2 text-base text-gray-100 outline-none border border-gray-600/50 placeholder:text-gray-400 focus:border-panthor-red focus:ring-2 focus:ring-panthor-red/30 transition-all duration-200 sm:text-sm/6" :placeholder="placeholder" :aria-describedby="id + '-description'" />
       </div>
-      <p class="mt-2 text-sm text-gray-500" :id="id + '-description'">{{ description }}</p>
+      <p class="mt-2 text-sm text-gray-400" :id="id + '-description'">{{ description }}</p>
     </div>
 </template>
 

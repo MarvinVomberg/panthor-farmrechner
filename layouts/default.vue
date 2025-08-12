@@ -1,7 +1,7 @@
 <template>
   <HeaderMenu />
 
-  <div class="flex min-h-full flex-col">
+  <div class="flex min-h-screen flex-col pt-0">
     <slot></slot>
   </div>
 
@@ -14,10 +14,10 @@ import { SpeedInsights } from "@vercel/speed-insights/nuxt"
 useHead({
   title: "Farmrechner | Panthor.de",
   htmlAttrs: {
-    class: "h-full bg-dark text-gray-200"
+    class: "bg-gradient-animated text-gray-200"
   },
   bodyAttrs: {
-    class: "h-full"
+    class: "min-h-screen"
   },
 })
 </script>

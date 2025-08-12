@@ -27,63 +27,105 @@ defineProps(
   }
 )
 
+const priceChange = computed(() => {
+  if (!marketHistoryData.length) return 0
+  return (marketHistoryData[marketHistoryData.length - 1].price / marketHistoryData[0].price) - 1
+})
+
+const isPositive = computed(() => priceChange.value > 0)
+const isNegative = computed(() => priceChange.value < 0)
+const isNeutral = computed(() => priceChange.value === 0)
 </script>
 
 <template>
-  <div class="rounded-lg shadow-sm mb-4">
-    <div class="rounded-lg bg-white/10 shadow-lg md:shadow-xl relative overflow-hidden">
-      <div class="px-3 pt-8 pb-16 text-center relative z-10 flex flex-col items-center justify-center">
-        <h3 class="text-2xl text-gray-100 font-semibold leading-tight">
-          {{ title }}
-        </h3>
-        <div class="inline-flex items-center">
-          <h4 class="text-md uppercase text-gray-400 leading-tight mr-2">{{ priceNow.toLocaleString() }} €</h4>
-
-          <template v-if="(marketHistoryData[marketHistoryData.length - 1].price / marketHistoryData[0].price) > 1">
-            <ArrowTrendingUpIcon class="text-green-500 size-6" />
-          </template>
-          <template v-else-if="(marketHistoryData[marketHistoryData.length - 1].price / marketHistoryData[0].price) < 1">
-            <ArrowTrendingDownIcon class="text-red-500 size-6" />
-          </template>
-          <template v-else>
-            <ArrowLongRightIcon class="text-gray-400 size-6" />
-          </template>
-
-          <span class="text-gray-400 text-sm ml-2">
-            {{
-              ((marketHistoryData[marketHistoryData.length - 1].price / marketHistoryData[0].price) * 100 - 100).toFixed(2)
-            }} %
+  <div class="bg-gradient-to-br from-gray-900/70 to-gray-800/50 backdrop-blur-xl rounded-3xl border border-gray-700/40 shadow-2xl hover:shadow-3xl hover:scale-[1.02] transition-all duration-300 overflow-hidden group">
+    <!-- Header -->
+    <div class="p-6 pb-4">
+      <h3 class="text-lg font-bold text-gray-200 group-hover:text-white transition-colors duration-200 mb-3 line-clamp-2">
+        {{ title }}
+      </h3>
+      
+      <!-- Price & Change Info -->
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col">
+          <span class="text-2xl font-bold text-gray-100">
+            {{ priceNow.toLocaleString() }} €
           </span>
+          <div class="flex items-center mt-1">
+            <template v-if="isPositive">
+              <ArrowTrendingUpIcon class="text-green-400 size-4 mr-1" />
+              <span class="text-green-400 text-sm font-medium">
+                +{{ (priceChange * 100).toFixed(2) }}%
+              </span>
+            </template>
+            <template v-else-if="isNegative">
+              <ArrowTrendingDownIcon class="text-red-400 size-4 mr-1" />
+              <span class="text-red-400 text-sm font-medium">
+                {{ (priceChange * 100).toFixed(2) }}%
+              </span>
+            </template>
+            <template v-else>
+              <ArrowLongRightIcon class="text-gray-400 size-4 mr-1" />
+              <span class="text-gray-400 text-sm font-medium">
+                0.00%
+              </span>
+            </template>
+          </div>
         </div>
 
-
+        <!-- Trend Indicator -->
+        <div class="flex items-center justify-center w-12 h-12 rounded-xl"
+             :class="{
+               'bg-green-500/20 border border-green-500/30': isPositive,
+               'bg-red-500/20 border border-red-500/30': isNegative,
+               'bg-gray-500/20 border border-gray-500/30': isNeutral
+             }">
+          <ArrowTrendingUpIcon v-if="isPositive" class="text-green-400 size-6" />
+          <ArrowTrendingDownIcon v-else-if="isNegative" class="text-red-400 size-6" />
+          <ArrowLongRightIcon v-else class="text-gray-400 size-6" />
+        </div>
       </div>
-      <div class="absolute bottom-0 inset-x-[-12px]">
+    </div>
+
+    <!-- Chart Section -->
+    <div class="relative h-20 mx-4 mb-4">
+      <div class="absolute inset-0 rounded-xl overflow-hidden">
         <LineChart
             :responsive="true"
             :height="height"
             :hideTooltip="onlyGraph"
             :hideLegend="onlyGraph"
             :data="marketHistoryData"
-            :xDomainLine="!onlyGraph"
-            :yDomainLine="!onlyGraph"
+            :xDomainLine="false"
+            :yDomainLine="false"
             :categories="{
                 price: {
-                  name: 'Aktueller Preis: ' + marketHistoryData[marketHistoryData.length - 1].price + ' €',
-                  color: ((marketHistoryData[marketHistoryData.length - 1].price / marketHistoryData[0].price) > 1) ? '#00c950' : (((marketHistoryData[marketHistoryData.length - 1].price / marketHistoryData[0].price) < 1) ? '#ff0000' : '#808080'),
+                  name: 'Preis: ' + marketHistoryData[marketHistoryData.length - 1].price + ' €',
+                  color: isPositive ? '#10b981' : (isNegative ? '#ef4444' : '#6b7280'),
                 }
               }"
-            :yFormatter="(value: number) => onlyGraph ? '' : value.toLocaleString('de-DE', { style: 'currency', trailingZeroDisplay: 'stripIfInteger', currency: 'EUR' })"
-            :xFormatter="(i: number) => onlyGraph ? '' : new Date(marketHistoryData[i].created_at).toLocaleTimeString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })"
+            :yFormatter="() => ''"
+            :xFormatter="() => ''"
         />
+      </div>
+      
+      <!-- Gradient Overlay -->
+      <div class="absolute inset-0 rounded-xl"
+           :class="{
+             'bg-gradient-to-t from-green-500/10 to-transparent': isPositive,
+             'bg-gradient-to-t from-red-500/10 to-transparent': isNegative,
+             'bg-gradient-to-t from-gray-500/10 to-transparent': isNeutral
+           }">
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 </style>

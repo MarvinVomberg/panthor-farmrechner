@@ -3,6 +3,43 @@
 
 @theme {
     --color-panthor-red: #e52222;
+    --color-panthor-red-dark: #cc1e1e;
     --color-dark: #0f2537;
+    --color-dark-light: #1a3c52;
+    --color-accent: #3b82f6;
+    --color-accent-light: #60a5fa;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
     --font-sans: InterVariable, sans-serif;
+}
+
+/* Subtle geometric background pattern */
+.bg-pattern {
+    background-color: #0f1419;
+    background-image: 
+        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.015) 1px, transparent 0);
+    background-size: 32px 32px;
+    background-repeat: repeat;
+}
+
+/* Subtle static gradient background */
+.bg-gradient-animated {
+    background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 25%, #0f2537 50%, #1e293b 75%, #0f1419 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    min-height: 100vh;
+}
+
+/* Header glass effect */
+.header-glass {
+    background: rgba(15, 20, 25, 0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Tab indicator animation */
+.tab-indicator {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }

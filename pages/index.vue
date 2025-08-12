@@ -13,7 +13,7 @@ import {farmroutes} from "~/farmroutes";
 import {type GenericProduction, ProcessingStep} from "~/farmroutes/production";
 import type {ChartItem} from "~/types/charts";
 import {ChevronDownIcon} from '@heroicons/vue/16/solid';
-import {HomeIcon, ShieldCheckIcon, TruckIcon} from '@heroicons/vue/20/solid';
+import {HomeIcon, ShieldCheckIcon, TruckIcon, ChartBarIcon, CubeIcon} from '@heroicons/vue/20/solid';
 import TextInput from "~/components/TextInput.vue";
 import {vAutoAnimate} from "@formkit/auto-animate/vue";
 import Farmroute from "~/components/Farmroute.vue";
@@ -53,6 +53,10 @@ const toggleTab = (tabName: string) => {
 
 const selectedTab = computed(() => {
   return tabs.value.find(tab => tab.current);
+});
+
+const currentTabIndex = computed(() => {
+  return tabs.value.findIndex(tab => tab.current);
 });
 
 const fullSelectedVehicle = computed<Vehicle | null>(() => {
@@ -141,214 +145,288 @@ watch(selectedShopType, (item: ComboboxItem | null) => {
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
-    <div class="shrink-0 border-gray-200 px-4 py-6 order-last sm:px-6 lg:w-96 border-t-0 lg:border-l lg:pr-8 xl:pr-6">
+  <div class="mx-auto w-full max-w-[100rem] grow mt-6 relative z-10">
+    <!-- Three Panel Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 px-6 sm:px-8 lg:px-12 xl:px-16">
+      
+      <!-- Left Panel: Vehicle Selection -->
+      <div class="lg:col-span-3 order-first">
+        <div class="bg-gradient-to-br from-gray-900/70 to-gray-800/50 backdrop-blur-xl rounded-3xl p-5 border border-gray-700/40 shadow-2xl hover:shadow-3xl transition-all duration-300">
+          <div class="mb-5">
+            <h3 class="text-lg font-bold text-gray-200 mb-2">Fahrzeugauswahl</h3>
+            <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
+          </div>
 
-      <ComboboxWithImage
-          tabindex="3"
-          label="Marktitem auswählen"
-          :items="Object.values(farmroutes).map((product: GenericProduction) => {
-            return {
-              id: product.productName,
-              name: product.productLocalizedName,
-            }
-          })"
-          v-model="selectedMarketItem"
-      />
+          <!-- Tab Navigation -->
+          <div class="mb-6">
+            <div class="grid grid-cols-1 sm:hidden">
+              <select @change="toggleTab(($event.target as HTMLSelectElement)?.value)" aria-label="Tab auswählen"
+                      class="col-start-1 row-start-1 w-full appearance-none rounded-2xl bg-white/90 backdrop-blur-sm py-3 pr-8 pl-4 text-base text-gray-900 outline-none border border-gray-200 shadow-sm focus:border-panthor-red focus:ring-2 focus:ring-panthor-red/20 transition-all duration-200">
+                <option v-for="tab in tabs" :key="tab.name" :selected="tab.current" :value="tab.name">{{
+                    tab.name
+                  }}
+                </option>
+              </select>
+              <ChevronDownIcon
+                  class="pointer-events-none col-start-1 row-start-1 mr-3 size-5 self-center justify-self-end fill-gray-500"
+                  aria-hidden="true"/>
+            </div>
+            <div class="hidden sm:block">
+              <div class="relative border-b border-gray-600/40">
+                <nav class="-mb-px flex" aria-label="Tabs">
+                  <button v-for="tab in tabs" :key="tab.name" @click="toggleTab(tab.name)"
+                          :class="[tab.current ? 'text-panthor-red' : 'text-gray-300 hover:text-gray-200', 'group relative inline-flex items-center px-6 py-3 text-sm font-semibold cursor-pointer transition-colors duration-200 flex-1 justify-center']"
+                          :aria-current="tab.current ? 'page' : undefined">
+                    <component :is="tab.icon"
+                               :class="[tab.current ? 'text-panthor-red' : 'text-gray-300 group-hover:text-gray-200', 'mr-2 -ml-0.5 size-5 transition-colors duration-200']"
+                               aria-hidden="true"/>
+                    <span>{{ tab.name }}</span>
+                  </button>
+                </nav>
+                <!-- Sliding indicator -->
+                <div 
+                  class="absolute bottom-0 h-0.5 bg-gradient-to-r from-panthor-red to-panthor-red-dark shadow-sm tab-indicator"
+                  :style="{
+                    width: `${100 / tabs.length}%`,
+                    transform: `translateX(${currentTabIndex * 100}%)`
+                  }"
+                ></div>
+              </div>
+            </div>
+          </div>
 
-      <div>
-        <p class="mt-2 text-sm text-gray-500">
-          Wähle ein Marktitem aus, um die Erträge und Kosten zu berechnen.
-        </p>
+          <!-- Tab Content -->
+          <div class="space-y-4">
+            <div v-show="selectedTab?.name === 'Shops'">
+              <ComboboxWithImage
+                  tabindex="1"
+                  label="Shop auswählen"
+                  :items="vehicleShopTypes.map((vehicleShopType: VehicleShopType) => ({
+              id: vehicleShopType.shoptype,
+              name: vehicleShopType.shopname
+            }))"
+                  v-model="selectedShopType"
+              />
+
+              <div class="mt-4 bg-gray-800/40 backdrop-blur-sm rounded-2xl p-4 border border-gray-600/40">
+                <p class="text-sm text-gray-300 leading-relaxed">
+                  Wähle einen Shop aus, um die verfügbaren Fahrzeuge zu sehen.
+                </p>
+              </div>
+
+              <template v-if="loadingShopTypes">
+                <p class="mt-2 text-sm text-gray-300">Lade Shoptypen...</p>
+              </template>
+
+              <ComboboxWithImage
+                  tabindex="2"
+                  class="mt-6"
+                  label="Fahrzeug auswählen"
+                  :items="vehicles.map((vehicle: Vehicle) => ({
+              id: vehicle.id,
+              name: vehicle.name + ' (' + vehicle.v_space.toLocaleString() + ' kg)',
+            }))"
+                  v-model="selectedVehicle"
+              />
+              
+              <div class="mt-4 bg-gray-800/40 backdrop-blur-sm rounded-2xl p-4 border border-gray-600/40">
+                <p class="text-sm text-gray-300 leading-relaxed">
+                  Wähle ein Fahrzeug aus, um die Details zu sehen.
+                </p>
+              </div>
+
+              <template v-if="loadingVehicles">
+                <p class="mt-2 text-sm text-gray-300">Lade Fahrzeuge...</p>
+              </template>
+
+              <template v-if="selectedVehicle && fullSelectedVehicle">
+                <div class="mt-6 bg-gradient-to-r from-panthor-red/20 to-red-900/30 backdrop-blur-sm rounded-2xl p-5 border border-panthor-red/30 shadow-sm">
+                  <h3 class="text-sm font-bold text-panthor-red mb-3 flex items-center">
+                    <TruckIcon class="mr-2 size-4" />
+                    Fahrzeugdetails
+                  </h3>
+                  <div class="space-y-2">
+                    <p class="text-sm text-gray-200 font-medium">{{ fullSelectedVehicle.name }}</p>
+                    <p class="text-sm text-gray-300">
+                      <span class="font-semibold">Kapazität:</span> {{ fullSelectedVehicle.v_space.toLocaleString() }} kg
+                    </p>
+                    <p class="text-sm text-gray-300">
+                      <span class="font-semibold">Preis:</span> {{ fullSelectedVehicle.price.toLocaleString() }} €
+                    </p>
+                  </div>
+                </div>
+              </template>
+            </div>
+            
+            <div v-show="selectedTab?.name === 'Garage'">
+              <div>
+                <TextInput
+                    v-model="playerAPIToken"
+                    label="API Token"
+                    placeholder="Gib deinen API Token ein"
+                    description="Niemand außer dir kann diesen Token sehen. Er wird benötigt, um deine Fahrzeuge zu laden, verlässt dabei aber niemals deinen Browser."
+                    type="text"
+                    id="api-token-input"
+                    @keydown.enter="fetchGarage"
+                />
+
+                <template v-if="playerVehicles === null">
+                  <button :disabled="loadingVehicles" @click="fetchGarage" type="button"
+                          class="mt-6 inline-flex items-center gap-x-2 rounded-2xl bg-gradient-to-r from-panthor-red to-panthor-red-dark px-6 py-3 text-sm font-bold text-white shadow-lg hover:shadow-xl hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-panthor-red transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <ShieldCheckIcon class="-ml-0.5 size-5" aria-hidden="true"/>
+                    Fahrzeuge laden
+                  </button>
+
+                  <template v-if="playerAPITokenError">
+                    <p class="mt-4 text-sm text-red-400 leading-tight bg-red-900/20 rounded-xl p-3 border border-red-600/30">{{ playerAPITokenError }}</p>
+                  </template>
+                </template>
+
+                <template v-else-if="playerVehicles.length === 0">
+                  <p class="mt-4 text-sm text-red-400 leading-tight bg-red-900/20 rounded-xl p-3 border border-red-600/30">Du hast keine Fahrzeuge in deiner Zivilistengarage.</p>
+                </template>
+
+                <template v-else>
+                  <ComboboxWithImage
+                      tabindex="2"
+                      class="mt-6"
+                      label="Fahrzeug auswählen"
+                      :items="playerVehicles.map((vehicle: Vehicle) => ({
+              id: vehicle.id,
+              name: vehicle.name + ' (' + vehicle.v_space.toLocaleString() + ' kg)',
+            }))"
+                      v-model="selectedVehicle"
+                  />
+                </template>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-600/30 pt-6">
+              <TextInput
+                  v-model="backpackSize"
+                  label="Rucksackgröße"
+                  placeholder="Gib deine Rucksackgröße ein"
+                  description="Gib die Größe deines Z-Inventars ein."
+                  type="number"
+                  id="backpack-size-input"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div v-auto-animate>
-        <template v-if="marketHistoryData.length">
-          <div class="chart-wrapper mt-8">
-            <AreaChart
-                :height="200"
-                :data="marketHistoryData"
-                :xDomainLine="true"
-                :yDomainLine="true"
-                :categories="{
-                price: {
-                  name: 'Aktueller Preis: ' + marketHistoryData[marketHistoryData.length - 1].price + ' €',
-                  color: '#ff0000'
-                }
-              }"
-                :yFormatter="(value: number) => value.toLocaleString('de-DE', { style: 'currency', trailingZeroDisplay: 'stripIfInteger', currency: 'EUR' })"
-                :xFormatter="(i: number) => new Date(marketHistoryData[i].created_at).toLocaleTimeString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })"
-            />
+      <!-- Center Panel: Farmroute Results -->
+      <div class="lg:col-span-6 order-none">
+        <template v-if="selectedMarketItem">
+          <div class="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/30 shadow-2xl hover:shadow-3xl transition-all duration-300" v-auto-animate>
+            <!-- Header Section -->
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-200 flex items-center mb-2">
+                <ChartBarIcon class="mr-3 size-6 text-panthor-red" />
+                Farmroute für {{ selectedMarketItem.name }}
+              </h2>
+              <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full mb-2"></div>
+              <p class="text-sm text-gray-300">Schritt-für-Schritt Anleitung zur Produktion</p>
+            </div>
+
+            <!-- Production Steps -->
+            <Farmroute :product="farmroutes[selectedMarketItem.id]" class="mb-8"/>
+
+            <!-- Results Section -->
+            <template v-if="selectedVehicle && selectedMarketItem">
+              <div class="bg-gradient-to-r from-gray-800/40 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-600/30 shadow-sm">
+                <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center">
+                  <CubeIcon class="mr-2 size-5 text-panthor-red" />
+                  Erwartetes Ergebnis
+                </h3>
+                
+                <template v-if="resultPrice === resultSize">
+                  <p class="text-gray-300 leading-relaxed">
+                    Nutze das produzierte Material zum Craften oder verkaufe es an andere Spieler.
+                  </p>
+                </template>
+                <template v-else>
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between bg-gray-800/50 rounded-xl p-4">
+                      <span class="text-gray-300">Produzierte Menge:</span>
+                      <span class="text-xl font-bold text-panthor-red">{{ resultSize.toLocaleString() }}kg</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-gray-800/50 rounded-xl p-4">
+                      <span class="text-gray-300">Geschätzter Gesamtwert:</span>
+                      <span class="text-xl font-bold text-panthor-red">{{ resultPrice.toLocaleString() }}€</span>
+                    </div>
+                    <p class="text-sm text-gray-400 text-center pt-2">
+                      Basierend auf aktuellem Marktpreis für {{ selectedMarketItem.name }}
+                    </p>
+                  </div>
+                </template>
+              </div>
+            </template>
+          </div>
+        </template>
+        
+        <template v-else>
+          <div class="bg-gradient-to-br from-gray-800/50 to-gray-900/40 backdrop-blur-xl rounded-3xl p-8 border border-gray-600/30 shadow-2xl">
+            <div class="text-center">
+              <ChartBarIcon class="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <h3 class="text-lg font-semibold text-gray-300 mb-2">Wähle ein Marktitem</h3>
+              <p class="text-gray-400">Beginne mit der Auswahl eines Marktitems, um die Farmroute und Erträge zu sehen.</p>
+            </div>
           </div>
         </template>
       </div>
-    </div>
 
-    <div class="flex-1 order-first xl:flex">
-      <div
-          class="border-y border-gray-200 px-4 py-6 sm:px-6 lg:border-t-0 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-r xl:border-b-0 xl:pl-6">
-
-        <div class="mb-8">
-          <div class="grid grid-cols-1 sm:hidden">
-            <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
-            <select @change="toggleTab($event.target?.value)" aria-label="Select a tab"
-                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/80 py-2 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-panthor-red">
-              <option v-for="tab in tabs" :key="tab.name" :selected="tab.current" :value="tab.name">{{
-                  tab.name
-                }}
-              </option>
-            </select>
-            <ChevronDownIcon
-                class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500"
-                aria-hidden="true"/>
+      <!-- Right Panel: Market Selection -->
+      <div class="lg:col-span-3 order-last">
+        <div class="bg-gradient-to-br from-gray-900/70 to-gray-800/50 backdrop-blur-xl rounded-3xl p-6 border border-gray-700/40 shadow-2xl hover:shadow-3xl transition-all duration-300">
+          <div class="mb-6">
+            <h3 class="text-lg font-bold text-gray-200 mb-2">Marktauswahl</h3>
+            <div class="h-0.5 bg-gradient-to-r from-panthor-red to-transparent rounded-full"></div>
           </div>
-          <div class="hidden sm:block">
-            <div class="border-b border-gray-200">
-              <nav class="-mb-px flex" aria-label="Tabs">
-                <button v-for="tab in tabs" :key="tab.name" @click="toggleTab(tab.name)"
-                        :class="[tab.current ? 'border-panthor-red text-panthor-red' : 'border-transparent text-gray-400 hover:border-gray-300 hover:text-gray-300', 'group inline-flex items-center border-b px-4 pb-4 text-sm font-medium cursor-pointer transition-all ease-linear']"
-                        :aria-current="tab.current ? 'page' : undefined">
-                  <component :is="tab.icon"
-                             :class="[tab.current ? 'text-panthor-red' : 'text-gray-400 group-hover:text-gray-400', 'mr-2 -ml-0.5 size-5 transition ease-in-out duration-150']"
-                             aria-hidden="true"/>
-                  <span>{{ tab.name }}</span>
-                </button>
-              </nav>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-span-2" v-show="selectedTab?.name === 'Shops'">
-          <ComboboxWithImage
-              tabindex="1"
-              label="Shop auswählen"
-              :items="vehicleShopTypes.map((vehicleShopType: VehicleShopType) => ({
-          id: vehicleShopType.shoptype,
-          name: vehicleShopType.shopname
-        }))"
-              v-model="selectedShopType"
-          />
-
-          <p class="mt-2 text-sm text-gray-500">
-            Wähle einen Shop aus, um die verfügbaren Fahrzeuge zu sehen.
-          </p>
-
-          <template v-if="loadingShopTypes">
-            <p class="mt-2 text-sm text-gray-500">Lade Shoptypen...</p>
-          </template>
 
           <ComboboxWithImage
-              tabindex="2"
-              class="mt-8"
-              label="Fahrzeug auswählen"
-              :items="vehicles.map((vehicle: Vehicle) => ({
-          id: vehicle.id,
-          name: vehicle.name + ' (' + vehicle.v_space.toLocaleString() + ' kg)',
-        }))"
-              v-model="selectedVehicle"
+              tabindex="3"
+              label="Marktitem auswählen"
+              :items="Object.values(farmroutes).map((product: GenericProduction) => {
+                return {
+                  id: product.productName,
+                  name: product.productLocalizedName,
+                }
+              })"
+              v-model="selectedMarketItem"
           />
-          <p class="mt-2 text-sm text-gray-500">
-            Wähle ein Fahrzeug aus, um die Details zu sehen.
-          </p>
 
-          <template v-if="loadingVehicles">
-            <p class="mt-2 text-sm text-gray-500">Lade Fahrzeuge...</p>
-          </template>
+          <div class="bg-gray-800/60 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-gray-600/40 mt-4">
+            <p class="text-sm text-gray-300 leading-relaxed">
+              Wähle ein Marktitem aus, um die Erträge und Kosten zu berechnen.
+            </p>
+          </div>
 
-          <template v-if="selectedVehicle && fullSelectedVehicle">
-            <div class="mt-8">
-              <h3 class="text-sm font-semibold">Details zum Fahrzeug</h3>
-              <p class="mt-2 text-sm text-gray-500 truncate">Name: {{ fullSelectedVehicle.name }}</p>
-              <p class="text-sm text-gray-500 truncate">Kapazität: {{
-                  fullSelectedVehicle.v_space.toLocaleString()
-                }}
-                Einheiten</p>
-              <p class="text-sm text-gray-500 truncate">Preis: {{ fullSelectedVehicle.price.toLocaleString() }}
-                €</p>
-            </div>
-          </template>
-        </div>
-        <div class="col-span-2" v-show="selectedTab?.name === 'Garage'">
-          <div>
-            <TextInput
-                v-model="playerAPIToken"
-                label="API Token"
-                placeholder="Gib deinen API Token ein"
-                description="Niemand außer dir kann diesen Token sehen. Er wird benötigt, um deine Fahrzeuge zu laden, verlässt dabei aber niemals deinen Browser."
-                type="text"
-                id="api-token-input"
-                @keydown.enter="fetchGarage"
-            />
-
-            <template v-if="playerVehicles === null">
-              <button :disabled="loadingVehicles" @click="fetchGarage" type="button"
-                      class="mt-4 inline-flex items-center gap-x-2 rounded-md bg-panthor-red px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-panthor-red/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-panthor-red">
-                <ShieldCheckIcon class="-ml-0.5 size-5" aria-hidden="true"/>
-                Fahrzeuge laden
-              </button>
-
-              <template v-if="playerAPITokenError">
-                <p class="mt-2 text-sm text-red-500 leading-tight">{{ playerAPITokenError }}</p>
-              </template>
-            </template>
-
-            <template v-else-if="playerVehicles.length === 0">
-              <p class="mt-2 text-sm text-red-500 leading-tight">Du hast keine Fahrzeuge in deiner Zivilistengarage.</p>
-            </template>
-
-            <template v-else>
-              <ComboboxWithImage
-                  tabindex="2"
-                  class="mt-8"
-                  label="Fahrzeug auswählen"
-                  :items="playerVehicles.map((vehicle: Vehicle) => ({
-          id: vehicle.id,
-          name: vehicle.name + ' (' + vehicle.v_space.toLocaleString() + ' kg)',
-        }))"
-                  v-model="selectedVehicle"
-              />
+          <div v-auto-animate>
+            <template v-if="marketHistoryData.length">
+              <div class="chart-wrapper mt-6 bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-600/50">
+                <AreaChart
+                    :height="200"
+                    :data="marketHistoryData"
+                    :xDomainLine="true"
+                    :yDomainLine="true"
+                    :categories="{
+                    price: {
+                      name: 'Aktueller Preis: ' + marketHistoryData[marketHistoryData.length - 1].price + ' €',
+                      color: '#ff0000'
+                    }
+                  }"
+                    :yFormatter="(value: number) => value.toLocaleString('de-DE', { style: 'currency', trailingZeroDisplay: 'stripIfInteger', currency: 'EUR' })"
+                    :xFormatter="(i: number) => new Date(marketHistoryData[i].created_at).toLocaleTimeString('de-DE', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })"
+                />
+              </div>
             </template>
           </div>
         </div>
-
-        <hr class="my-8 border-gray-200">
-
-        <TextInput
-            v-model="backpackSize"
-            label="Rucksackgröße"
-            placeholder="Gib deine Rucksackgröße ein"
-            description="Gib die Größe deines Z-Inventars ein."
-            type="number"
-            id="backpack-size-input"
-        />
       </div>
-
-
-      <template v-if="selectedMarketItem">
-
-        <div class="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6" v-auto-animate>
-          <h2 class="text-lg font-semibold text-panthor-red">Farmroute</h2>
-
-          <Farmroute :product="farmroutes[selectedMarketItem.id]" class="mt-4"/>
-
-          <template v-if="selectedVehicle  && selectedMarketItem">
-            <template v-if="resultPrice === resultSize">
-              <p>und nutze es dann zum craften oder verkaufe es an andere Spieler</p>
-            </template>
-            <template v-else>
-              <p>und erhalte dafür <span class="text-panthor-red">{{ resultSize.toLocaleString() }}kg</span>
-                {{ selectedMarketItem.name }} mit einem Gesamtwert von <span
-                    class="text-panthor-red">{{ resultPrice.toLocaleString() }}€</span></p>
-            </template>
-          </template>
-        </div>
-      </template>
     </div>
-
-
   </div>
 </template>
