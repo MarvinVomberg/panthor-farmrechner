@@ -1,5 +1,5 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting"
-import {ironBarProduction} from "~/farmroutes/iron_bar";
+import {farmroutes} from "~/farmroutes";
 import {Gunpowder} from "~/crafting/weapon/bullets/Gunpowder";
 import {CartridgeCase} from "~/crafting/weapon/bullets/CartridgeCase";
 import {Projectile} from "~/crafting/weapon/bullets/Projectile";
@@ -12,6 +12,6 @@ export const MediumBullet = new CraftItem(
         new CraftMaterial(1, Gunpowder),
         new CraftMaterial(1, CartridgeCase),
         new CraftMaterial(1, Projectile),
-        new CraftMaterial(1, ironBarProduction)
+        new CraftMaterial(1, farmroutes.iron_bar)
     ]
 )

@@ -1,15 +1,13 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {steelBarProduction} from "~/farmroutes/steel_r";
-import {rubberProduction} from "~/farmroutes/rubber";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
+import {farmroutes} from "~/farmroutes";
 
 export const TailRotor = new CraftItem(
     'tailrotor',
     'Heckrotor',
     1,
     [
-        new CraftMaterial(15, ironBarProduction),
-        new CraftMaterial(10, steelBarProduction),
-        new CraftMaterial(5, rubberProduction),
+        new CraftMaterial(15, farmroutes.iron_bar),
+        new CraftMaterial(10, farmroutes.steel_r),
+        new CraftMaterial(5, farmroutes.rubber),
     ]
 )

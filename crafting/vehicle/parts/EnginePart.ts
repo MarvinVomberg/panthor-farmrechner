@@ -1,17 +1,14 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
-import {steelBarProduction} from "~/farmroutes/steel_r";
-import {aluminumBarProduction} from "~/farmroutes/alu_bar";
-import {oilProduction} from "~/farmroutes/oil_r";
+import {farmroutes} from "~/farmroutes";
 
 export const EnginePart = new CraftItem(
     'engine_part',
     'Motorenteil',
     1,
     [
-        new CraftMaterial(12, ironBarProduction),
-        new CraftMaterial(5, steelBarProduction),
-        new CraftMaterial(8, aluminumBarProduction),
-        new CraftMaterial(5, oilProduction),
+        new CraftMaterial(12, farmroutes.iron_bar),
+        new CraftMaterial(5, farmroutes.steel_r),
+        new CraftMaterial(8, farmroutes.aluminum_r),
+        new CraftMaterial(5, farmroutes.oil_r),
     ]
 )

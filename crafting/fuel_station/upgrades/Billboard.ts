@@ -1,19 +1,15 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {aluminumBarProduction} from "~/farmroutes/alu_bar";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
-import {steelBarProduction} from "~/farmroutes/steel_r";
-import {glassProduction} from "~/farmroutes/sand_r";
-import {cableProduction} from "~/farmroutes/cable";
+import {farmroutes} from "~/farmroutes";
 
 export const Billboard = new CraftItem(
     'billboard',
     'Werbeschild',
     0,
     [
-        new CraftMaterial(2, aluminumBarProduction),
-        new CraftMaterial(3, ironBarProduction),
-        new CraftMaterial(2, steelBarProduction),
-        new CraftMaterial(18, glassProduction),
-        new CraftMaterial(3, cableProduction),
+        new CraftMaterial(2, farmroutes.aluminum_r),
+        new CraftMaterial(3, farmroutes.iron_bar),
+        new CraftMaterial(2, farmroutes.steel_r),
+        new CraftMaterial(18, farmroutes.sand_r),
+        new CraftMaterial(3, farmroutes.cable),
     ]
 )

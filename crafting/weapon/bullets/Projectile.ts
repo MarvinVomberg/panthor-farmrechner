@@ -1,11 +1,11 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting"
-import {ironBarProduction} from "~/farmroutes/iron_bar";
+import {farmroutes} from "~/farmroutes";
 
 export const Projectile = new CraftItem(
     'projectile',
     'Projektil',
     10,
     [
-        new CraftMaterial(1, ironBarProduction),
+        new CraftMaterial(1, farmroutes.iron_bar),
     ]
 )

@@ -1,14 +1,11 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {plasticProduction} from "~/farmroutes/plastic";
-import {aluminumBarProduction} from "~/farmroutes/alu_bar";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
-import {scrapProduction} from "~/farmroutes/scrap";
+import {farmroutes} from "~/farmroutes";
 
 const materials = [
-    new CraftMaterial(8, plasticProduction),
-    new CraftMaterial(5, aluminumBarProduction),
-    new CraftMaterial(7, ironBarProduction),
-    new CraftMaterial(5, scrapProduction)
+    new CraftMaterial(8, farmroutes.plastic),
+    new CraftMaterial(5, farmroutes.aluminum_r),
+    new CraftMaterial(7, farmroutes.iron_bar),
+    new CraftMaterial(5, farmroutes.scrap)
 ];
 
 export const CircuitBoard = new CraftItem(

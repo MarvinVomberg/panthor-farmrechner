@@ -1,13 +1,12 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
-import {copperBarProduction} from "~/farmroutes/copper_r";
+import {farmroutes} from "~/farmroutes";
 
 export const DataCable = new CraftItem(
     'data_cable',
     'Datenkabel',
     8,
     [
-        new CraftMaterial(6, ironBarProduction),
-        new CraftMaterial(8, copperBarProduction)
+        new CraftMaterial(6, farmroutes.iron_bar),
+        new CraftMaterial(8, farmroutes.copper_r)
     ]
 )

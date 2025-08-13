@@ -1,17 +1,14 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting"
-import {aluminumBarProduction} from "~/farmroutes/alu_bar";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
-import {copperBarProduction} from "~/farmroutes/copper_r";
-import {titaniumBarProduction} from "~/farmroutes/titanium_r";
+import {farmroutes} from "~/farmroutes";
 
 export const SilencerThread = new CraftItem(
     'silencer_thread',
     'Gewinde (Schalldämpfer)',
     10,
     [
-        new CraftMaterial(3, ironBarProduction),
-        new CraftMaterial(4, copperBarProduction),
-        new CraftMaterial(3, aluminumBarProduction),
-        new CraftMaterial(2, titaniumBarProduction),
+        new CraftMaterial(3, farmroutes.iron_bar),
+        new CraftMaterial(4, farmroutes.copper_r),
+        new CraftMaterial(3, farmroutes.aluminum_r),
+        new CraftMaterial(2, farmroutes.titanium_r),
     ]
 )

@@ -1,15 +1,13 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {plasticProduction} from "~/farmroutes/plastic";
-import {aluminumBarProduction} from "~/farmroutes/alu_bar";
-import {copperBarProduction} from "~/farmroutes/copper_r";
+import {farmroutes} from "~/farmroutes";
 
 export const Leiterplatte = new CraftItem(
     'leiterplatte',
     'Leiterplatte',
     8,
     [
-        new CraftMaterial(5, plasticProduction),
-        new CraftMaterial(6, aluminumBarProduction),
-        new CraftMaterial(3, copperBarProduction),
+        new CraftMaterial(5, farmroutes.plastic),
+        new CraftMaterial(6, farmroutes.aluminum_r),
+        new CraftMaterial(3, farmroutes.copper_r),
     ]
 )

@@ -1,22 +1,16 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {aluminumBarProduction} from "~/farmroutes/alu_bar";
-import {copperBarProduction} from "~/farmroutes/copper_r";
-import {glassProduction} from "~/farmroutes/sand_r";
-import {rubberProduction} from "~/farmroutes/rubber";
-import {cableProduction} from "~/farmroutes/cable";
-import {doorProduction} from "~/farmroutes/door";
-import {windowProduction} from "~/farmroutes/window";
+import {farmroutes} from "~/farmroutes";
 
 export const Payphone = new CraftItem(
     'payphone',
     'Telefonhaus',
     0,
     [
-        new CraftMaterial(3, aluminumBarProduction),
-        new CraftMaterial(3, copperBarProduction),
-        new CraftMaterial(5, glassProduction),
-        new CraftMaterial(5, rubberProduction),
-        new CraftMaterial(5, cableProduction),
+        new CraftMaterial(3, farmroutes.aluminum_r),
+        new CraftMaterial(3, farmroutes.copper_r),
+        new CraftMaterial(5, farmroutes.sand_r),
+        new CraftMaterial(5, farmroutes.rubber),
+        new CraftMaterial(5, farmroutes.cable),
         new CraftMaterial(3, doorProduction),
         new CraftMaterial(5, windowProduction),
     ]

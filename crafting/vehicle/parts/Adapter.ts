@@ -1,13 +1,12 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {plasticProduction} from "~/farmroutes/plastic";
-import {aluminumBarProduction} from "~/farmroutes/alu_bar";
+import {farmroutes} from "~/farmroutes";
 
 export const Adapter = new CraftItem(
     'adapter',
     'Adapter',
     8,
     [
-        new CraftMaterial(7, plasticProduction),
-        new CraftMaterial(3, aluminumBarProduction),
+        new CraftMaterial(7, farmroutes.plastic),
+        new CraftMaterial(3, farmroutes.aluminum_r),
     ]
 )

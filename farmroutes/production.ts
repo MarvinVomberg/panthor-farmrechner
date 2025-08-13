@@ -1,5 +1,5 @@
 import type {MarketItem, MarketItemResponse} from "~/types/api";
-import {server_items_cfg} from "~/farmroutes/server_items_cfg";
+import {server_items_cfg} from "./server_items_cfg";
 
 class RawMaterial {
     constructor(

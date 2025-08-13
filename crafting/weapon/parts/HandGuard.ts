@@ -1,11 +1,11 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting"
-import {plasticProduction} from "~/farmroutes/plastic";
+import {farmroutes} from "~/farmroutes";
 
 export const HandGuard = new CraftItem(
     'hand_guard',
     'Waffenhandschutz',
     10,
     [
-        new CraftMaterial(2, plasticProduction),
+        new CraftMaterial(2, farmroutes.plastic),
     ]
 )

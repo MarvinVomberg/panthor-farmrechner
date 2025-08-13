@@ -1,6 +1,6 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting"
 import {MediumBullet} from "~/crafting/weapon/bullets/MediumBullet";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
+import {farmroutes} from "~/farmroutes";
 
 export const Promet_65mm_20_Round = new CraftItem(
     'promet_65mm_20_round',
@@ -8,6 +8,6 @@ export const Promet_65mm_20_Round = new CraftItem(
     10,
     [
         new CraftMaterial(2, MediumBullet),
-        new CraftMaterial(1, ironBarProduction),
+        new CraftMaterial(1, farmroutes.iron_bar),
     ]
 )

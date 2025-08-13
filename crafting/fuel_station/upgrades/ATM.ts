@@ -1,21 +1,16 @@
 import {CraftItem, CraftMaterial} from "~/types/crafting";
-import {copperBarProduction} from "~/farmroutes/copper_r";
-import {ironBarProduction} from "~/farmroutes/iron_bar";
-import {plasticProduction} from "~/farmroutes/plastic";
-import {rubberProduction} from "~/farmroutes/rubber";
-import {cableProduction} from "~/farmroutes/cable";
-import {windowProduction} from "~/farmroutes/window";
+import {farmroutes} from "~/farmroutes";
 
 export const ATM = new CraftItem(
     'atm',
     'Geldautomat',
     0,
     [
-        new CraftMaterial(2, copperBarProduction),
-        new CraftMaterial(7, ironBarProduction),
-        new CraftMaterial(4, plasticProduction),
-        new CraftMaterial(2, rubberProduction),
-        new CraftMaterial(11, cableProduction),
+        new CraftMaterial(2, farmroutes.copper_r),
+        new CraftMaterial(7, farmroutes.iron_bar),
+        new CraftMaterial(4, farmroutes.plastic),
+        new CraftMaterial(2, farmroutes.rubber),
+        new CraftMaterial(11, farmroutes.cable),
         new CraftMaterial(2, windowProduction),
     ]
 )

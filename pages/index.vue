@@ -10,7 +10,7 @@ import type {
 import type {ComboboxItem} from "~/components/ComboboxWithImage.vue";
 import {computed, onMounted, ref, watch} from 'vue'
 import {farmroutes} from "~/farmroutes";
-import {type GenericProduction, ProcessingStep} from "~/farmroutes/production";
+import {type GenericProduction, type ProcessingStep} from "~/farmroutes/production";
 import type {ChartItem} from "~/types/charts";
 import {ChevronDownIcon} from '@heroicons/vue/16/solid';
 import {HomeIcon, ShieldCheckIcon, TruckIcon, ChartBarIcon, CubeIcon} from '@heroicons/vue/20/solid';
